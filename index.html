@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series Explorer: Three Views | Mathswell</title>
+    <link rel="icon" href="/logo-mathswell-square-mirror.ico" type="image/x-icon">
+    <link rel="icon" href="/logo-mathswell-square-mirror.svg" type="image/svg+xml">
+    
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-light: #10b981;
+            --background: #f7faf9;
+            --interactive: #e6fffb;
+            --text-primary: #212121;
+            --text-muted: #4b5563;
+            --accent-amber: #f59e0b;
+            --accent-red: #c62828;
+            --success: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            padding-top: 60px;
+            min-height: 100vh;
+        }
+        
+        .mathswell-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 2px solid var(--primary);
+            padding: 0.75rem 1rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .mw-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        /* Tab Navigation - CENTERED */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: var(--interactive);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Introduction Tab Styles */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .concept-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--interactive);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+        
+        .card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .demo-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        /* Explorer Tab Styles */
+        .explorer-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+        
+        .control-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+        
+        .visualization-area {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .preset-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .preset-section h3 {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .preset-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .preset-pill {
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .preset-pill:hover {
+            background: var(--interactive);
+            transform: translateY(-2px);
+        }
+        
+        .preset-pill.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .control-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .control-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: var(--interactive);
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        
+        .slider-value {
+            min-width: 40px;
+            text-align: right;
+            font-family: 'Monaco', monospace;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .info-display {
+            background: var(--interactive);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .info-value {
+            font-family: 'Monaco', monospace;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        .btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-light);
+        }
+        
+        /* View Selector */
+        .view-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+        
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .view-btn:hover:not(.active) {
+            background: var(--interactive);
+        }
+        
+        /* Visualization Panels */
+        .view-panel {
+            display: none;
+            min-height: 500px;
+        }
+        
+        .view-panel.active {
+            display: block;
+        }
+        
+        /* Numerical View */
+        .numerical-display {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 2rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #0f0;
+            min-height: 400px;
+        }
+        
+        .sum-display {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+        
+        .digit-indicator {
+            display: inline-block;
+            padding: 0 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .digit-indicator.changing {
+            color: #ff0;
+            background: rgba(255, 255, 0, 0.1);
+        }
+        
+        .digit-indicator.stable {
+            color: #0f0;
+        }
+        
+        .terms-list {
+            font-size: 0.875rem;
+            color: #888;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+        }
+        
+        /* Number Line View */
+        .numberline-canvas {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 2rem;
+        }
+        
+        /* Staircase View */
+        .staircase-canvas {
+            width: 100%;
+            height: 400px;
+            border: 2px solid var(--interactive);
+            border-radius: 8px;
+        }
+        
+        /* Comparison Test Section */
+        .comparison-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .comparison-title {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .comparison-series {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .series-box {
+            background: var(--interactive);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
+        }
+        
+        /* Challenge Tab with MathPal */
+        .ai-disclosure-banner {
+            background: var(--interactive);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .mathpal-workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .workspace-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .workspace-title {
+            color: var(--primary);
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .problem-display {
+            background: var(--interactive);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .hint-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .hint-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .hint-btn:hover {
+            background: var(--interactive);
+        }
+        
+        .hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .mathpal-thinking {
+            display: none;
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        .mathpal-thinking.active {
+            display: block;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .mathpal-response {
+            background: var(--interactive);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 100px;
+        }
+        
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 2rem;
+        }
+        
+        .nav-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 968px) {
+            .explorer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-panel {
+                position: relative;
+                top: 0;
+            }
+            
+            .mathpal-workspace {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-series {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .concept-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            input, button, select {
+                font-size: 16px;
+                min-height: 44px;
+            }
+        }
+        
+        /* MathPal Robot Animation */
+        @keyframes robot-blink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.1; }
+        }
+        
+        .robot-eye {
+            animation: robot-blink 5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Centered Mathswell Navigation -->
+    <div class="mathswell-nav">
+        <a href="/" class="mw-link">
+            <img src="/logo-mathswell-square-mirror.svg" alt="Mathswell" width="28" height="28">
+            <span>MATHSWELL</span>
+        </a>
+    </div>
+    
+    <div class="container">
+        <!-- Centered Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="intro">📚 Introduction</button>
+            <button class="tab-btn" data-tab="explorer">🔬 Explorer</button>
+            <button class="tab-btn" data-tab="challenge">
+                🤝 Challenge with MathPal
+            </button>
+        </div>
+        
+        <!-- Tab 1: Introduction -->
+        <div id="intro" class="tab-content active">
+            <div class="hero">
+                <h1>Series: Three Ways to See Infinity</h1>
+                <p>When we add infinitely many numbers, does the sum "settle down" to a value? Let's explore convergence through three complementary views that build your intuition.</p>
+            </div>
+            
+            <div class="concept-cards">
+                <div class="card">
+                    <div class="card-icon">🔢</div>
+                    <h3>Numerical View</h3>
+                    <p>Watch decimal places stabilize for convergent series. Like 0.333... becoming 1/3, convergent series have digits that "calm down" while divergent ones keep changing forever.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">➡️</div>
+                    <h3>Number Line View</h3>
+                    <p>See partial sums hop along a line. Convergent series zero in on a target like a guided missile, while divergent ones wander off to infinity or bounce chaotically.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3>Staircase View</h3>
+                    <p>Imagine an infinite staircase where each term adds a step up or down. Do we reach a specific floor (converge) or keep climbing/falling forever (diverge)?</p>
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h2 class="demo-title">Quick Interactive Demo</h2>
+                <div class="preset-pills" style="justify-content: center; margin-bottom: 1.5rem;">
+                    <button class="preset-pill active" onclick="loadDemoSeries(event, 'geometric')">Geometric (Converges)</button>
+                    <button class="preset-pill" onclick="loadDemoSeries(event, 'harmonic')">Harmonic (Diverges)</button>
+                    <button class="preset-pill" onclick="loadDemoSeries(event, 'alternating')">Alternating (Converges)</button>
+                </div>
+                <canvas id="demo-canvas" width="800" height="200" style="width: 100%; height: 200px;"></canvas>
+                <div id="demo-formula" style="text-align: center; margin-top: 1rem; font-size: 1.125rem;"></div>
+            </div>
+            
+            <div class="concept-cards">
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Key Insight: Comparison Tests</h3>
+                    <p>Often we can't calculate a series exactly, but we can compare it to one we understand. If your series is smaller than a convergent one, it converges. If it's bigger than a divergent one, it diverges!</p>
+                </div>
+            </div>
+            
+            <center>
+                <button class="nav-btn" onclick="switchToTab('explorer')">Try the Explorer →</button>
+            </center>
+        </div>
+        
+        <!-- Tab 2: Explorer -->
+        <div id="explorer" class="tab-content">
+            <div class="explorer-container">
+                <div class="control-panel">
+                    <div class="preset-section">
+                        <h3>Series Type</h3>
+                        <div class="preset-pills">
+                            <button class="preset-pill active" onclick="loadSeries(event, 'geometric')">Geometric</button>
+                            <button class="preset-pill" onclick="loadSeries(event, 'harmonic')">Harmonic</button>
+                            <button class="preset-pill" onclick="loadSeries(event, 'p-series')">p-Series</button>
+                            <button class="preset-pill" onclick="loadSeries(event, 'alternating')">Alternating</button>
+                            <button class="preset-pill" onclick="loadSeries(event, 'telescoping')">Telescoping</button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Number of Terms</label>
+                        <div class="slider-container">
+                            <input type="range" id="termsSlider" min="5" max="100" value="20">
+                            <span class="slider-value" id="termsValue">20</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group" id="parameterControl">
+                        <label>Parameter (r or p)</label>
+                        <div class="slider-container">
+                            <input type="range" id="paramSlider" min="0.1" max="2" step="0.1" value="0.5">
+                            <span class="slider-value" id="paramValue">0.5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-display">
+                        <div class="info-item">
+                            <span class="info-label">Partial Sum:</span>
+                            <span class="info-value" id="partialSum">0.000</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Term:</span>
+                            <span class="info-value" id="lastTerm">0.000</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status:</span>
+                            <span class="info-value" id="convergenceStatus">Converges</span>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="animateSeries(event)">🎬 Animate</button>
+                        <button class="btn" onclick="resetSeries()">↺ Reset</button>
+                        <button class="btn" onclick="toggleComparison()">⚖️ Compare</button>
+                    </div>
+                </div>
+                
+                <div class="visualization-area">
+                    <div class="view-selector">
+                        <button class="view-btn active" onclick="switchView(event, 'numerical')">🔢 Numerical</button>
+                        <button class="view-btn" onclick="switchView(event, 'numberline')">➡️ Number Line</button>
+                        <button class="view-btn" onclick="switchView(event, 'staircase')">📊 Staircase</button>
+                    </div>
+                    
+                    <!-- Numerical View -->
+                    <div id="numerical-view" class="view-panel active">
+                        <div class="numerical-display">
+                            <div class="sum-display" id="sumDisplay">
+                                <span class="digit-indicator">0</span>.<span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span>
+                            </div>
+                            <div style="color: #888; font-size: 0.875rem;">
+                                Watch the digits: Yellow = changing, Green = stabilized
+                            </div>
+                            <div class="terms-list" id="termsList">
+                                <!-- Terms will be listed here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Number Line View -->
+                    <div id="numberline-view" class="view-panel">
+                        <canvas id="numberline-canvas" class="numberline-canvas"></canvas>
+                        <canvas id="numberline-detail" class="staircase-canvas"></canvas>
+                    </div>
+                    
+                    <!-- Staircase View -->
+                    <div id="staircase-view" class="view-panel">
+                        <canvas id="staircase-canvas" class="staircase-canvas"></canvas>
+                    </div>
+                    
+                    <div id="seriesFormula" style="text-align: center; margin-top: 1.5rem; padding: 1rem; background: var(--interactive); border-radius: 8px;"></div>
+                </div>
+            </div>
+            
+            <!-- Comparison Test Panel (initially hidden) -->
+            <div id="comparison-panel" class="comparison-panel" style="display: none;">
+                <h3 class="comparison-title">🔍 Comparison Test</h3>
+                <div class="comparison-series">
+                    <div class="series-box">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Your Series</h4>
+                        <div id="yourSeriesInfo"></div>
+                    </div>
+                    <div class="series-box">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Comparison Series</h4>
+                        <select id="comparisonSelect" onchange="updateComparison()">
+                            <option value="geometric-half">Geometric (r=1/2)</option>
+                            <option value="harmonic">Harmonic (1/n)</option>
+                            <option value="p-2">p-series (p=2)</option>
+                        </select>
+                        <div id="comparisonInfo" style="margin-top: 0.5rem;"></div>
+                    </div>
+                </div>
+                <canvas id="comparison-canvas" width="800" height="300" style="width: 100%; margin-top: 1rem;"></canvas>
+            </div>
+        </div>
+        
+        <!-- Tab 3: Challenge with MathPal -->
+        <div id="challenge" class="tab-content">
+            <!-- MathPal Disclosure Banner -->
+            <div class="ai-disclosure-banner">
+                <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center;">
+                    <svg width="50" height="50" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
+                        <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
+                        <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
+                        <line x1="50" y1="35" x2="50" y2="25" stroke="#0f766e" stroke-width="2"/>
+                        <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
+                        <circle cx="40" cy="47" r="5" fill="white"/>
+                        <circle cx="60" cy="47" r="5" fill="white"/>
+                        <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                        <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                        <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
+                    </svg>
+                    <div style="text-align: left;">
+                        <div style="font-weight: 600; color: var(--primary);">
+                            MathPal - Your AI Study Buddy
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted);">
+                            Learns alongside you • Can make mistakes • May be occasionally unavailable
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="problem-display">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Today's Challenge</h3>
+                <div id="problemStatement" style="font-size: 1.125rem; margin-bottom: 1rem;"></div>
+                <div id="problemFormula"></div>
+            </div>
+            
+            <div class="mathpal-workspace">
+                <div class="workspace-section">
+                    <div class="workspace-title">
+                        <span>✏️</span>
+                        <span>Your Analysis</span>
+                    </div>
+                    <textarea id="userWork" placeholder="Work through the problem here... Does this series converge? Why?" style="width: 100%; height: 200px; padding: 0.75rem; border: 2px solid var(--interactive); border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                    <div class="hint-buttons">
+                        <button class="hint-btn" onclick="getHint('nudge')">💭 Nudge</button>
+                        <button class="hint-btn" onclick="getHint('observation')">🔍 Observation</button>
+                        <button class="hint-btn" onclick="getHint('collaborate')">🤝 Collaborate</button>
+                        <button class="hint-btn" onclick="getHint('reveal')">💡 Reveal</button>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="checkWork()">✓ Check My Work</button>
+                </div>
+                
+                <div class="workspace-section">
+                    <div class="workspace-title">
+                        <svg width="24" height="24" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
+                            <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
+                            <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
+                            <line x1="50" y1="35" x2="50" y2="25" stroke="#0f766e" stroke-width="2"/>
+                            <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
+                            <circle cx="40" cy="47" r="5" fill="white"/>
+                            <circle cx="60" cy="47" r="5" fill="white"/>
+                            <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                            <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                            <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
+                        </svg>
+                        <span>MathPal's Thinking</span>
+                    </div>
+                    <div class="mathpal-thinking" id="mathpalThinking">
+                        MathPal is thinking...
+                    </div>
+                    <div class="mathpal-response" id="mathpalResponse">
+                        <p style="color: var(--text-muted); font-style: italic;">
+                            Hey! I'm ready to work through this series problem with you. Click one of the hint buttons when you want to compare notes!
+                        </p>
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 1rem;" onclick="compareApproaches()">🔄 Compare Methods</button>
+                </div>
+            </div>
+            
+            <center>
+                <button class="nav-btn" onclick="generateNewProblem()">🎲 New Problem</button>
+            </center>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let currentSeries = 'geometric';
+        let currentView = 'numerical';
+        let seriesTerms = [];
+        let partialSums = [];
+        let animationId = null;
+        let animationFrame = 0;
+        let currentProblem = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up event listeners
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.dataset.tab;
+                    switchToTab(tabId);
+                });
+            });
+            
+            document.getElementById('termsSlider').addEventListener('input', function(e) {
+                document.getElementById('termsValue').textContent = e.target.value;
+                updateSeries();
+            });
+            
+            document.getElementById('paramSlider').addEventListener('input', function(e) {
+                document.getElementById('paramValue').textContent = e.target.value;
+                updateSeries();
+            });
+            
+            // Initialize displays
+            updateSeries();
+            generateNewProblem();
+            initializeDemo();
+            
+            // Render initial formulas after KaTeX loads
+            setTimeout(() => {
+                if (typeof katex !== 'undefined') {
+                    updateFormulas();
+                }
+            }, 100);
+        });
+        
+        function switchToTab(tabId) {
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        function switchView(event, view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(`${view}-view`).classList.add('active');
+            
+            drawCurrentView();
+        }
+        
+        function loadSeries(event, type) {
+            currentSeries = type;
+            document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide parameter control based on series type
+            const paramControl = document.getElementById('parameterControl');
+            const paramSlider = document.getElementById('paramSlider');
+            const label = paramControl.querySelector('label');
+            
+            switch(type) {
+                case 'geometric':
+                    paramControl.style.display = 'block';
+                    label.textContent = 'Common Ratio (r)';
+                    paramSlider.min = '0.1';
+                    paramSlider.max = '1.5';
+                    paramSlider.step = '0.1';
+                    paramSlider.value = '0.5';
+                    break;
+                case 'p-series':
+                    paramControl.style.display = 'block';
+                    label.textContent = 'Exponent (p)';
+                    paramSlider.min = '0.5';
+                    paramSlider.max = '2';
+                    paramSlider.step = '0.1';
+                    paramSlider.value = '1.5';
+                    break;
+                default:
+                    paramControl.style.display = 'none';
+            }
+            
+            updateSeries();
+        }
+        
+        function generateSeriesTerms(type, n, param) {
+            const terms = [];
+            
+            switch(type) {
+                case 'geometric':
+                    for (let i = 0; i < n; i++) {
+                        terms.push(Math.pow(param, i));
+                    }
+                    break;
+                case 'harmonic':
+                    for (let i = 1; i <= n; i++) {
+                        terms.push(1 / i);
+                    }
+                    break;
+                case 'p-series':
+                    for (let i = 1; i <= n; i++) {
+                        terms.push(1 / Math.pow(i, param));
+                    }
+                    break;
+                case 'alternating':
+                    for (let i = 1; i <= n; i++) {
+                        terms.push(Math.pow(-1, i+1) / i);
+                    }
+                    break;
+                case 'telescoping':
+                    for (let i = 1; i <= n; i++) {
+                        terms.push(1/i - 1/(i+1));
+                    }
+                    break;
+            }
+            
+            return terms;
+        }
+        
+        function calculatePartialSums(terms) {
+            const sums = [0];
+            let sum = 0;
+            for (let i = 0; i < terms.length; i++) {
+                sum += terms[i];
+                sums.push(sum);
+            }
+            return sums;
+        }
+        
+        function updateSeries() {
+            const n = parseInt(document.getElementById('termsSlider').value);
+            const param = parseFloat(document.getElementById('paramSlider').value);
+            
+            seriesTerms = generateSeriesTerms(currentSeries, n, param);
+            partialSums = calculatePartialSums(seriesTerms);
+            
+            // Update info display
+            const lastSum = partialSums.length > 0 ? partialSums[partialSums.length - 1] : 0;
+            const lastTerm = seriesTerms.length > 0 ? seriesTerms[seriesTerms.length - 1] : 0;
+            
+            const partialSumEl = document.getElementById('partialSum');
+            const lastTermEl = document.getElementById('lastTerm');
+            const convergenceStatusEl = document.getElementById('convergenceStatus');
+            
+            if (partialSumEl) partialSumEl.textContent = lastSum.toFixed(6);
+            if (lastTermEl) lastTermEl.textContent = Math.abs(lastTerm).toExponential(3);
+            
+            // Determine convergence
+            let status = 'Unknown';
+            switch(currentSeries) {
+                case 'geometric':
+                    status = param < 1 ? 'Converges' : 'Diverges';
+                    break;
+                case 'harmonic':
+                    status = 'Diverges';
+                    break;
+                case 'p-series':
+                    status = param > 1 ? 'Converges' : 'Diverges';
+                    break;
+                case 'alternating':
+                    status = 'Converges';
+                    break;
+                case 'telescoping':
+                    status = 'Converges to 1';
+                    break;
+            }
+            if (convergenceStatusEl) convergenceStatusEl.textContent = status;
+            
+            // Set animation frame if not already set
+            if (animationFrame === 0 && partialSums.length > 0) {
+                animationFrame = partialSums.length - 1;
+            }
+            
+            drawCurrentView();
+            updateFormulas();
+        }
+        
+        function drawCurrentView() {
+            if (!partialSums || partialSums.length === 0) return;
+            
+            switch(currentView) {
+                case 'numerical':
+                    updateNumericalView();
+                    break;
+                case 'numberline':
+                    drawNumberLine();
+                    break;
+                case 'staircase':
+                    drawStaircase();
+                    break;
+            }
+        }
+        
+        function updateNumericalView() {
+            if (!partialSums || partialSums.length === 0) return;
+            
+            const sum = partialSums[partialSums.length - 1];
+            const sumStr = sum.toFixed(8);
+            const digits = sumStr.split('');
+            
+            const display = document.getElementById('sumDisplay');
+            display.innerHTML = '';
+            
+            // Check digit stability (simplified for demo)
+            const prevSum = partialSums.length > 1 ? partialSums[partialSums.length - 2] : 0;
+            const prevStr = prevSum.toFixed(8);
+            
+            digits.forEach((digit, i) => {
+                const span = document.createElement('span');
+                span.className = 'digit-indicator';
+                span.textContent = digit;
+                
+                if (prevStr[i] !== digit && digit !== '.') {
+                    span.classList.add('changing');
+                } else if (digit !== '.') {
+                    span.classList.add('stable');
+                }
+                
+                display.appendChild(span);
+            });
+            
+            // Update terms list
+            const termsList = document.getElementById('termsList');
+            termsList.innerHTML = '';
+            seriesTerms.slice(-10).reverse().forEach((term, i) => {
+                const index = seriesTerms.length - i;
+                const line = document.createElement('div');
+                line.textContent = `Term ${index}: ${term.toExponential(3)}`;
+                termsList.appendChild(line);
+            });
+        }
+        
+        function drawNumberLine() {
+            const canvas = document.getElementById('numberline-canvas');
+            const ctx = canvas.getContext('2d');
+            const detailCanvas = document.getElementById('numberline-detail');
+            const detailCtx = detailCanvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            detailCanvas.width = detailCanvas.offsetWidth;
+            detailCanvas.height = detailCanvas.offsetHeight;
+            
+            // Clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            detailCtx.clearRect(0, 0, detailCanvas.width, detailCanvas.height);
+            
+            // Draw main number line
+            const padding = 40;
+            const lineY = canvas.height / 2;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, lineY);
+            ctx.lineTo(canvas.width - padding, lineY);
+            ctx.stroke();
+            
+            // Find range
+            const minSum = Math.min(0, ...partialSums);
+            const maxSum = Math.max(...partialSums);
+            const range = maxSum - minSum || 1;
+            
+            // Draw partial sums as hops
+            const xScale = (canvas.width - 2 * padding) / range;
+            
+            ctx.strokeStyle = '#0f766e';
+            ctx.fillStyle = '#0f766e';
+            
+            for (let i = 0; i <= animationFrame && i < partialSums.length; i++) {
+                const x = padding + (partialSums[i] - minSum) * xScale;
+                
+                // Draw point
+                ctx.beginPath();
+                ctx.arc(x, lineY, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw hop arc
+                if (i > 0) {
+                    const prevX = padding + (partialSums[i-1] - minSum) * xScale;
+                    ctx.strokeStyle = seriesTerms[i-1] > 0 ? '#10b981' : '#c62828';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, lineY);
+                    ctx.quadraticCurveTo(
+                        (prevX + x) / 2, 
+                        lineY - Math.abs(x - prevX) * 0.3,
+                        x, lineY
+                    );
+                    ctx.stroke();
+                }
+            }
+            
+            // Draw detailed view
+            drawDetailedNumberLine(detailCtx, detailCanvas.width, detailCanvas.height);
+        }
+        
+        function drawDetailedNumberLine(ctx, width, height) {
+            const padding = 40;
+            
+            // Draw axes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.stroke();
+            
+            if (partialSums.length < 2) return;
+            
+            // Plot partial sums
+            const xStep = (width - 2 * padding) / (partialSums.length - 1);
+            const minY = Math.min(...partialSums);
+            const maxY = Math.max(...partialSums);
+            const yScale = (height - 2 * padding) / (maxY - minY || 1);
+            
+            ctx.strokeStyle = '#0f766e';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            for (let i = 0; i <= animationFrame && i < partialSums.length; i++) {
+                const x = padding + i * xStep;
+                const y = height - padding - (partialSums[i] - minY) * yScale;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+                
+                // Draw point
+                ctx.fillStyle = '#0f766e';
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.stroke();
+        }
+        
+        function drawStaircase() {
+            const canvas = document.getElementById('staircase-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 40;
+            
+            // Draw axes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            if (partialSums.length < 2) return;
+            
+            // Calculate scales
+            const xStep = (canvas.width - 2 * padding) / Math.max(partialSums.length - 1, 1);
+            const minY = Math.min(0, ...partialSums);
+            const maxY = Math.max(...partialSums);
+            const yRange = maxY - minY || 1;
+            const yScale = (canvas.height - 2 * padding) / yRange;
+            
+            // Draw zero line
+            if (minY < 0 && maxY > 0) {
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                const zeroY = canvas.height - padding + minY * yScale;
+                ctx.moveTo(padding, zeroY);
+                ctx.lineTo(canvas.width - padding, zeroY);
+                ctx.stroke();
+            }
+            
+            // Draw staircase
+            const framesToShow = Math.min(animationFrame + 1, partialSums.length);
+            
+            for (let i = 1; i < framesToShow; i++) {
+                const prevX = padding + (i - 1) * xStep;
+                const x = padding + i * xStep;
+                const prevY = canvas.height - padding - (partialSums[i - 1] - minY) * yScale;
+                const y = canvas.height - padding - (partialSums[i] - minY) * yScale;
+                
+                // Color based on term sign
+                ctx.strokeStyle = seriesTerms[i - 1] > 0 ? '#10b981' : '#c62828';
+                ctx.lineWidth = 2;
+                
+                // Draw step
+                ctx.beginPath();
+                ctx.moveTo(prevX, prevY);
+                ctx.lineTo(x, prevY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                // Draw point
+                ctx.fillStyle = '#0f766e';
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw labels
+            ctx.fillStyle = '#4b5563';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('n →', canvas.width / 2, canvas.height - 10);
+            
+            ctx.save();
+            ctx.translate(15, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Partial Sum', 0, 0);
+            ctx.restore();
+        }
+        
+        function animateSeries(event) {
+            const btn = event.target;
+            
+            if (animationId) {
+                clearInterval(animationId);
+                animationId = null;
+                btn.textContent = '🎬 Animate';
+                animationFrame = partialSums.length - 1;
+            } else {
+                animationFrame = 0;
+                btn.textContent = '⏸ Pause';
+                
+                animationId = setInterval(() => {
+                    if (animationFrame < partialSums.length - 1) {
+                        animationFrame++;
+                        drawCurrentView();
+                    } else {
+                        clearInterval(animationId);
+                        animationId = null;
+                        btn.textContent = '🎬 Animate';
+                    }
+                }, 200);
+            }
+        }
+        
+        function resetSeries() {
+            if (animationId) {
+                clearInterval(animationId);
+                animationId = null;
+                document.querySelector('.btn-primary').textContent = '🎬 Animate';
+            }
+            animationFrame = partialSums.length - 1;
+            document.getElementById('termsSlider').value = 20;
+            document.getElementById('termsValue').textContent = '20';
+            updateSeries();
+        }
+        
+        function toggleComparison() {
+            const panel = document.getElementById('comparison-panel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            if (panel.style.display === 'block') {
+                updateComparison();
+            }
+        }
+        
+        function updateComparison() {
+            // Update comparison info
+            const yourInfo = document.getElementById('yourSeriesInfo');
+            const compInfo = document.getElementById('comparisonInfo');
+            
+            yourInfo.innerHTML = `
+                <div>Type: ${currentSeries}</div>
+                <div>Sum: ${partialSums[partialSums.length - 1].toFixed(4)}</div>
+            `;
+            
+            const compType = document.getElementById('comparisonSelect').value;
+            let compTerms = [];
+            
+            if (compType === 'geometric-half') {
+                compTerms = generateSeriesTerms('geometric', seriesTerms.length, 0.5);
+            } else if (compType === 'harmonic') {
+                compTerms = generateSeriesTerms('harmonic', seriesTerms.length, null);
+            } else {
+                compTerms = generateSeriesTerms('p-series', seriesTerms.length, 2);
+            }
+            
+            const compSums = calculatePartialSums(compTerms);
+            compInfo.innerHTML = `Sum: ${compSums[compSums.length - 1].toFixed(4)}`;
+            
+            // Draw comparison chart
+            drawComparisonChart(compSums);
+        }
+        
+        function drawComparisonChart(compSums) {
+            const canvas = document.getElementById('comparison-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 40;
+            const n = Math.max(partialSums.length, compSums.length);
+            const xStep = (canvas.width - 2 * padding) / (n - 1);
+            
+            const allSums = [...partialSums, ...compSums];
+            const minY = Math.min(...allSums);
+            const maxY = Math.max(...allSums);
+            const yScale = (canvas.height - 2 * padding) / (maxY - minY || 1);
+            
+            // Draw axes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Draw your series
+            ctx.strokeStyle = '#0f766e';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < partialSums.length; i++) {
+                const x = padding + i * xStep;
+                const y = canvas.height - padding - (partialSums[i] - minY) * yScale;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Draw comparison series
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < compSums.length; i++) {
+                const x = padding + i * xStep;
+                const y = canvas.height - padding - (compSums[i] - minY) * yScale;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Legend
+            ctx.font = '12px sans-serif';
+            ctx.fillStyle = '#0f766e';
+            ctx.fillText('Your Series', padding, 20);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillText('Comparison', padding + 100, 20);
+        }
+        
+        function updateFormulas() {
+            if (typeof katex === 'undefined') {
+                setTimeout(updateFormulas, 100);
+                return;
+            }
+            
+            const formulaDiv = document.getElementById('seriesFormula');
+            let formula = '';
+            
+            switch(currentSeries) {
+                case 'geometric':
+                    const paramSlider = document.getElementById('paramSlider');
+                    const r = paramSlider ? paramSlider.value : '0.5';
+                    formula = `\\sum_{n=0}^{\\infty} r^n = \\sum_{n=0}^{\\infty} (${r})^n`;
+                    if (parseFloat(r) < 1) {
+                        formula += ` = \\frac{1}{1-${r}} \\approx ${(1/(1-parseFloat(r))).toFixed(3)}`;
+                    }
+                    break;
+                case 'harmonic':
+                    formula = '\\sum_{n=1}^{\\infty} \\frac{1}{n} \\to \\infty \\text{ (diverges)}';
+                    break;
+                case 'p-series':
+                    const paramSlider2 = document.getElementById('paramSlider');
+                    const p = paramSlider2 ? paramSlider2.value : '1.5';
+                    formula = `\\sum_{n=1}^{\\infty} \\frac{1}{n^${p}}`;
+                    if (parseFloat(p) > 1) {
+                        formula += ' \\text{ (converges)}';
+                    } else {
+                        formula += ' \\text{ (diverges)}';
+                    }
+                    break;
+                case 'alternating':
+                    formula = '\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = \\ln(2) \\approx 0.693';
+                    break;
+                case 'telescoping':
+                    formula = '\\sum_{n=1}^{\\infty} \\left(\\frac{1}{n} - \\frac{1}{n+1}\\right) = 1';
+                    break;
+            }
+            
+            if (formulaDiv) {
+                katex.render(formula, formulaDiv, { displayMode: true });
+            }
+            
+            // Update demo formula
+            const demoFormula = document.getElementById('demo-formula');
+            if (demoFormula && demoFormula.dataset.series) {
+                let demoTex = '';
+                switch(demoFormula.dataset.series) {
+                    case 'geometric':
+                        demoTex = '\\sum_{n=0}^{\\infty} \\left(\\frac{1}{2}\\right)^n = 2';
+                        break;
+                    case 'harmonic':
+                        demoTex = '\\sum_{n=1}^{\\infty} \\frac{1}{n} \\to \\infty';
+                        break;
+                    case 'alternating':
+                        demoTex = '\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = \\ln(2)';
+                        break;
+                }
+                katex.render(demoTex, demoFormula, { displayMode: true });
+            }
+            
+            // Update problem formula
+            if (currentProblem && document.getElementById('problemFormula')) {
+                katex.render(currentProblem.formula, document.getElementById('problemFormula'), { displayMode: true });
+            }
+        }
+        
+        // Demo functions
+        function initializeDemo() {
+            const canvas = document.getElementById('demo-canvas');
+            if (!canvas) return;
+            
+            loadDemoSeries('geometric');
+        }
+        
+        function loadDemoSeries(eventOrType, type) {
+            // Handle both event-driven calls and programmatic calls
+            if (typeof eventOrType === 'string') {
+                type = eventOrType;
+                // No event, so we'll manually set the active pill
+                document.querySelectorAll('.demo-section .preset-pill').forEach(p => {
+                    p.classList.remove('active');
+                    if (p.textContent.toLowerCase().includes(type)) {
+                        p.classList.add('active');
+                    }
+                });
+            } else {
+                // Event-driven call
+                document.querySelectorAll('.demo-section .preset-pill').forEach(p => p.classList.remove('active'));
+                eventOrType.target.classList.add('active');
+            }
+            
+            const canvas = document.getElementById('demo-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            let terms = [];
+            switch(type) {
+                case 'geometric':
+                    terms = generateSeriesTerms('geometric', 30, 0.5);
+                    break;
+                case 'harmonic':
+                    terms = generateSeriesTerms('harmonic', 30, null);
+                    break;
+                case 'alternating':
+                    terms = generateSeriesTerms('alternating', 30, null);
+                    break;
+            }
+            
+            const sums = calculatePartialSums(terms);
+            
+            // Draw simple visualization
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 20;
+            const xStep = (canvas.width - 2 * padding) / (sums.length - 1);
+            const minY = Math.min(...sums);
+            const maxY = Math.max(...sums);
+            const yScale = (canvas.height - 2 * padding) / (maxY - minY || 1);
+            
+            ctx.strokeStyle = '#0f766e';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            for (let i = 0; i < sums.length; i++) {
+                const x = padding + i * xStep;
+                const y = canvas.height - padding - (sums[i] - minY) * yScale;
+                
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Update formula
+            const formulaDiv = document.getElementById('demo-formula');
+            formulaDiv.dataset.series = type;
+            updateFormulas();
+        }
+        
+        // Challenge/MathPal functions
+        function generateNewProblem() {
+            const problems = [
+                {
+                    statement: "Does this series converge or diverge?",
+                    formula: "\\sum_{n=1}^{\\infty} \\frac{\\ln(n)}{n^2}",
+                    answer: "converges",
+                    hint: "Compare with p-series where p=2"
+                },
+                {
+                    statement: "Determine if this series converges:",
+                    formula: "\\sum_{n=1}^{\\infty} \\frac{n}{n^2 + 1}",
+                    answer: "diverges",
+                    hint: "Compare with harmonic series"
+                },
+                {
+                    statement: "What can you say about this series?",
+                    formula: "\\sum_{n=1}^{\\infty} \\frac{(-1)^n}{\\sqrt{n}}",
+                    answer: "converges conditionally",
+                    hint: "Check alternating series test"
+                },
+                {
+                    statement: "Does this geometric-like series converge?",
+                    formula: "\\sum_{n=0}^{\\infty} \\frac{2^n}{3^n}",
+                    answer: "converges to 3",
+                    hint: "This is geometric with r=2/3"
+                }
+            ];
+            
+            currentProblem = problems[Math.floor(Math.random() * problems.length)];
+            document.getElementById('problemStatement').textContent = currentProblem.statement;
+            updateFormulas();
+        }
+        
+        function getHint(level) {
+            const response = document.getElementById('mathpalResponse');
+            showMathPalThinking();
+            
+            setTimeout(() => {
+                hideMathPalThinking();
+                
+                let hint = '';
+                switch(level) {
+                    case 'nudge':
+                        hint = "Hmm, I'm looking at the general term... What test might work here?";
+                        break;
+                    case 'observation':
+                        hint = `I notice ${currentProblem.hint}. That's making me think about comparison...`;
+                        break;
+                    case 'collaborate':
+                        hint = `Let's work together! I tried the comparison test and got that it ${currentProblem.answer}. What method did you use?`;
+                        break;
+                    case 'reveal':
+                        hint = `I got that it ${currentProblem.answer}! Here's my approach: ${currentProblem.hint}. Want to compare our work?`;
+                        break;
+                }
+                
+                response.innerHTML = `<p style="color: var(--text-primary);">${hint}</p>`;
+            }, 1000);
+        }
+        
+        function checkWork() {
+            const userWork = document.getElementById('userWork').value;
+            const response = document.getElementById('mathpalResponse');
+            
+            if (!userWork.trim()) {
+                response.innerHTML = '<p style="color: var(--text-muted);">Hey, write down your thoughts first! I want to see your approach.</p>';
+                return;
+            }
+            
+            showMathPalThinking();
+            
+            setTimeout(() => {
+                hideMathPalThinking();
+                
+                const feedback = userWork.toLowerCase().includes(currentProblem.answer.split(' ')[0]) 
+                    ? `Nice! I got the same answer - it ${currentProblem.answer}. Your reasoning looks solid!`
+                    : `Interesting approach! I got something different though. Want to compare methods?`;
+                
+                response.innerHTML = `<p style="color: var(--text-primary);">${feedback}</p>`;
+            }, 1500);
+        }
+        
+        function compareApproaches() {
+            const response = document.getElementById('mathpalResponse');
+            showMathPalThinking();
+            
+            setTimeout(() => {
+                hideMathPalThinking();
+                response.innerHTML = `
+                    <p style="color: var(--text-primary);">
+                        Here's how I approached it: ${currentProblem.hint}. 
+                        This led me to conclude it ${currentProblem.answer}. 
+                        Your method might be different but equally valid - that's the beauty of math!
+                    </p>
+                `;
+            }, 1000);
+        }
+        
+        function showMathPalThinking() {
+            document.getElementById('mathpalThinking').classList.add('active');
+        }
+        
+        function hideMathPalThinking() {
+            document.getElementById('mathpalThinking').classList.remove('active');
+        }
+        
+        // Initialize animation frame
+        window.addEventListener('load', () => {
+            if (partialSums && partialSums.length > 0) {
+                animationFrame = partialSums.length - 1;
+                drawCurrentView();
+            }
+        });
+    </script>
+</body>
+</html>
