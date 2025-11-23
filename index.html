@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Series Explorer: Three Views | Mathswell</title>
+    <title>Series Explorer | Mathswell</title>
     <link rel="icon" href="/logo-mathswell-square-mirror.ico" type="image/x-icon">
     <link rel="icon" href="/logo-mathswell-square-mirror.svg" type="image/svg+xml">
     
-    <!-- KaTeX for math rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     
@@ -24,11 +23,7 @@
             --success: #10b981;
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -39,625 +34,266 @@
         }
         
         .mathswell-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-bottom: 2px solid var(--primary);
-            padding: 0.75rem 1rem;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top: 0; left: 0; right: 0;
+            background: white; border-bottom: 2px solid var(--primary);
+            padding: 0.75rem 1rem; z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
         }
         
         .mw-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 600;
-            letter-spacing: 1px;
+            display: flex; align-items: center; gap: 0.5rem;
+            text-decoration: none; color: var(--primary);
+            font-weight: 600; letter-spacing: 1px;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
         
-        /* Tab Navigation - CENTERED */
+        /* Tab Navigation */
         .tabs {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            background: white;
-            padding: 0.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
+            display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;
+            background: white; padding: 0.5rem; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem;
         }
         
         .tab-btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 0.75rem 1.5rem; border: none; background: transparent;
+            color: var(--text-muted); cursor: pointer; border-radius: 8px;
+            font-weight: 500; transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 0.5rem;
         }
         
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-        }
+        .tab-btn.active { background: var(--primary); color: white; }
+        .tab-btn:hover:not(.active) { background: var(--interactive); color: var(--primary); }
         
-        .tab-btn:hover:not(.active) {
-            background: var(--interactive);
-            color: var(--primary);
-        }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
+        /* Hero Section */
+        .hero { text-align: center; margin-bottom: 2rem; }
+        .hero h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; font-weight: 700; }
+        .hero p { font-size: 1.125rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; line-height: 1.6; }
         
-        .tab-content.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Introduction Tab Styles */
-        .hero {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .hero h1 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-        
-        .hero p {
-            font-size: 1.125rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        
+        /* Concept Cards */
         .concept-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem; margin-bottom: 2rem;
         }
-        
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-        
+        .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
         .card-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--interactive);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
+            width: 50px; height: 50px; background: var(--interactive);
+            border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; margin-bottom: 1rem; font-size: 1.8rem;
         }
+        .card h3 { color: var(--primary); margin-bottom: 0.75rem; font-size: 1.25rem; }
+        .card p { color: var(--text-muted); line-height: 1.6; }
         
-        .card h3 {
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-            font-size: 1.25rem;
-        }
-        
-        .card p {
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-        
-        .demo-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .demo-title {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        /* Explorer Tab Styles */
-        .explorer-container {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 2rem;
-        }
-        
+        /* Explorer Styles */
+        .explorer-container { display: grid; grid-template-columns: 320px 1fr; gap: 2rem; }
         .control-panel {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            height: fit-content;
-            position: sticky;
-            top: 80px;
+            background: white; border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1); height: fit-content;
+            position: sticky; top: 80px;
         }
-        
         .visualization-area {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: white; border-radius: 12px; padding: 1.5rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
         
-        .preset-section {
-            margin-bottom: 1.5rem;
-        }
-        
-        .preset-section h3 {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .preset-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
+        .preset-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
         .preset-pill {
-            padding: 0.4rem 1rem;
-            border-radius: 999px;
-            background: white;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.875rem;
-            font-weight: 500;
+            padding: 0.4rem 1rem; border-radius: 999px; background: white;
+            border: 2px solid var(--primary); color: var(--primary);
+            cursor: pointer; transition: all 0.2s ease; font-size: 0.875rem; font-weight: 500;
         }
+        .preset-pill:hover { background: var(--interactive); transform: translateY(-2px); }
+        .preset-pill.active { background: var(--primary); color: white; }
         
-        .preset-pill:hover {
-            background: var(--interactive);
-            transform: translateY(-2px);
-        }
-        
-        .preset-pill.active {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .control-group {
-            margin-bottom: 1.25rem;
-        }
-        
-        .control-group label {
-            display: block;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.25rem;
-        }
-        
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        input[type="range"] {
-            flex: 1;
-            height: 6px;
-            background: var(--interactive);
-            border-radius: 3px;
-            outline: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--primary);
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        
-        .slider-value {
-            min-width: 40px;
-            text-align: right;
-            font-family: 'Monaco', monospace;
-            color: var(--primary);
-            font-weight: 600;
-        }
+        .control-group { margin-bottom: 1.25rem; }
+        .control-group label { display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .slider-container { display: flex; align-items: center; gap: 1rem; }
+        input[type="range"] { flex: 1; height: 6px; background: var(--interactive); border-radius: 3px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--primary); cursor: pointer; border-radius: 50%; }
+        .slider-value { min-width: 40px; text-align: right; font-family: 'Monaco', monospace; color: var(--primary); font-weight: 600; }
         
         .info-display {
-            background: var(--interactive);
-            border: 1px solid var(--primary);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+            background: var(--interactive); border: 1px solid var(--primary);
+            border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;
         }
+        .info-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .info-item:last-child { margin-bottom: 0; }
+        .info-value { font-family: 'Monaco', monospace; color: var(--primary); font-weight: 600; }
         
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .info-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-        
-        .info-value {
-            font-family: 'Monaco', monospace;
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        
+        .button-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--primary);
-            background: white;
-            color: var(--primary);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            font-size: 0.875rem;
+            padding: 0.5rem 1rem; border: 2px solid var(--primary);
+            background: white; color: var(--primary); border-radius: 6px;
+            cursor: pointer; font-weight: 500; transition: all 0.2s ease; font-size: 0.875rem;
         }
-        
-        .btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-1px);
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-light);
-            border-color: var(--primary-light);
-        }
+        .btn:hover { background: var(--primary); color: white; transform: translateY(-1px); }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-light); border-color: var(--primary-light); }
         
         /* View Selector */
-        .view-selector {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            justify-content: center;
-        }
-        
+        .view-selector { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: center; }
         .view-btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--primary);
-            background: white;
-            color: var(--primary);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            font-size: 0.875rem;
+            padding: 0.5rem 1rem; border: 2px solid var(--primary); background: white;
+            color: var(--primary); border-radius: 6px; cursor: pointer;
+            font-weight: 500; transition: all 0.2s ease; font-size: 0.875rem;
         }
+        .view-btn.active { background: var(--primary); color: white; }
         
-        .view-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .view-btn:hover:not(.active) {
-            background: var(--interactive);
-        }
-        
-        /* Visualization Panels */
-        .view-panel {
-            display: none;
-            min-height: 500px;
-        }
-        
-        .view-panel.active {
-            display: block;
-        }
+        .view-panel { display: none; min-height: 400px; }
+        .view-panel.active { display: block; }
         
         /* Numerical View */
         .numerical-display {
-            background: #1a1a1a;
-            border-radius: 8px;
-            padding: 2rem;
-            font-family: 'Monaco', 'Courier New', monospace;
-            color: #0f0;
-            min-height: 400px;
+            background: #1a1a1a; border-radius: 8px; padding: 1.5rem;
+            font-family: 'Monaco', 'Courier New', monospace; color: #0f0;
+            display: flex; flex-direction: column; gap: 1.5rem;
         }
+        .sum-display { font-size: 2rem; letter-spacing: 2px; text-align: center; margin-bottom: 0.5rem; }
+        .digit-indicator { display: inline-block; padding: 0 2px; transition: all 0.3s ease; }
+        .digit-indicator.changing { color: #ff0; background: rgba(255, 255, 0, 0.1); }
+        .digit-indicator.stable { color: #0f0; }
         
-        .sum-display {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
+        /* Comparison Lab Styles */
+        .lab-intro {
+            background: white; border-radius: 12px; padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1); margin-bottom: 2rem; text-align: center;
         }
+        .lab-intro h2 { color: var(--primary); margin-bottom: 1rem; }
+        .lab-intro p { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
         
-        .digit-indicator {
-            display: inline-block;
-            padding: 0 2px;
-            transition: all 0.3s ease;
+        .comparison-scenarios {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem; margin-bottom: 2rem;
         }
-        
-        .digit-indicator.changing {
-            color: #ff0;
-            background: rgba(255, 255, 0, 0.1);
+        .scenario-card {
+            background: white; border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1); cursor: pointer;
+            transition: all 0.3s ease; border: 2px solid transparent;
         }
+        .scenario-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        .scenario-card.active { border-color: var(--primary); background: var(--interactive); }
+        .scenario-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .scenario-title { color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
+        .scenario-desc { font-size: 0.875rem; color: var(--text-muted); }
         
-        .digit-indicator.stable {
-            color: #0f0;
-        }
-        
-        .terms-list {
-            font-size: 0.875rem;
-            color: #888;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #333;
-        }
-        
-        /* Number Line View */
-        .numberline-canvas {
-            width: 100%;
-            height: 150px;
-            margin-bottom: 2rem;
-        }
-        
-        /* Staircase View */
-        .staircase-canvas {
-            width: 100%;
-            height: 400px;
-            border: 2px solid var(--interactive);
-            border-radius: 8px;
-        }
-        
-        /* Comparison Test Section */
-        .comparison-panel {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
+        .lab-visualization {
+            background: white; border-radius: 12px; padding: 2rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            margin-top: 2rem;
         }
-        
-        .comparison-title {
-            color: var(--primary);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+        .lab-result {
+            margin-top: 1.5rem; padding: 1.5rem; border-radius: 8px;
+            font-size: 1.125rem; line-height: 1.8;
         }
+        .lab-result.valid { background: #d1fae5; border-left: 4px solid var(--success); color: #065f46; }
+        .lab-result.invalid { background: #fee2e2; border-left: 4px solid var(--accent-red); color: #7f1d1d; }
         
-        .comparison-series {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        .series-box {
-            background: var(--interactive);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--primary);
-        }
-        
-        /* Challenge Tab with MathPal */
+        /* MathPal Challenge Styles */
         .ai-disclosure-banner {
-            background: var(--interactive);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 2rem;
+            background: var(--interactive); border: 2px solid var(--primary);
+            border-radius: 12px; padding: 1rem; margin-bottom: 2rem;
         }
         
         .mathpal-workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
         }
         
         .workspace-section {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: white; border-radius: 12px; padding: 1.5rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
         
         .workspace-title {
-            color: var(--primary);
-            font-size: 1.125rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-size: 1.125rem; color: var(--primary); margin-bottom: 1rem;
+            font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
         }
         
         .problem-display {
-            background: var(--interactive);
-            border: 1px solid var(--primary);
-            border-radius: 8px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
+            background: var(--interactive); border-radius: 8px; padding: 1.5rem;
+            margin-bottom: 2rem; text-align: center;
         }
         
-        .hint-buttons {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
+        .work-area {
+            min-height: 200px; padding: 1rem; border: 2px dashed var(--primary);
+            border-radius: 8px; background: white;
         }
         
-        .hint-btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--primary);
-            background: white;
-            color: var(--primary);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        .hint-btn:hover {
-            background: var(--interactive);
-        }
-        
-        .hint-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .work-area textarea {
+            width: 100%; min-height: 150px; border: none; outline: none;
+            font-family: 'Monaco', monospace; resize: vertical;
         }
         
         .mathpal-thinking {
-            display: none;
-            padding: 1rem;
-            text-align: center;
-            color: var(--text-muted);
+            padding: 1rem; background: var(--interactive); border-radius: 8px;
+            min-height: 150px; font-style: italic; color: var(--text-muted);
         }
         
         .mathpal-thinking.active {
-            display: block;
-            animation: pulse 1s infinite;
+            animation: pulse 1.5s infinite;
         }
         
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.7; }
         }
         
-        .mathpal-response {
-            background: var(--interactive);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-            min-height: 100px;
+        .hint-buttons {
+            display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;
+        }
+        
+        .hint-btn {
+            flex: 1; padding: 0.75rem; border: 2px solid var(--primary);
+            background: white; color: var(--primary); border-radius: 6px;
+            cursor: pointer; font-weight: 500; transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: center; gap: 0.25rem;
+        }
+        
+        .hint-btn:hover:not(:disabled) { 
+            background: var(--interactive); transform: translateY(-2px); 
+        }
+        
+        .hint-btn:disabled {
+            opacity: 0.5; cursor: not-allowed;
+        }
+        
+        .action-buttons {
+            display: flex; gap: 1rem; margin-top: 2rem;
         }
         
         .nav-btn {
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 0.75rem 1.5rem; background: var(--primary); color: white;
+            border: none; border-radius: 6px; font-weight: 600; cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 2rem;
         }
         
-        .nav-btn:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
+        .nav-btn:hover { background: var(--primary-light); }
+        
+        .mathpal-response {
+            padding: 1rem; background: white; border: 2px solid var(--primary);
+            border-radius: 8px; margin-top: 1rem;
+        }
+        
+        /* MathPal SVG */
+        .mathpal-icon {
+            display: inline-block; vertical-align: middle;
         }
         
         /* Mobile Responsiveness */
-        @media (max-width: 968px) {
-            .explorer-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .control-panel {
-                position: relative;
-                top: 0;
-            }
-            
-            .mathpal-workspace {
-                grid-template-columns: 1fr;
-            }
-            
-            .comparison-series {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 640px) {
-            .concept-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            .tabs {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            input, button, select {
-                font-size: 16px;
-                min-height: 44px;
-            }
-        }
-        
-        /* MathPal Robot Animation */
-        @keyframes robot-blink {
-            0%, 90%, 100% { opacity: 1; }
-            95% { opacity: 0.1; }
-        }
-        
-        .robot-eye {
-            animation: robot-blink 5s infinite;
+        @media (max-width: 768px) {
+            .explorer-container { grid-template-columns: 1fr; }
+            .control-panel { position: relative; top: 0; }
+            .mathpal-workspace { grid-template-columns: 1fr; }
+            .comparison-scenarios { grid-template-columns: 1fr; }
+            .tabs { padding: 0.5rem; }
+            .tab-btn { padding: 0.5rem 1rem; font-size: 0.875rem; }
+            input, button, select { font-size: 16px; min-height: 44px; }
         }
     </style>
 </head>
 <body>
-    <!-- Centered Mathswell Navigation -->
     <div class="mathswell-nav">
         <a href="/" class="mw-link">
             <img src="/logo-mathswell-square-mirror.svg" alt="Mathswell" width="28" height="28">
@@ -666,77 +302,60 @@
     </div>
     
     <div class="container">
-        <!-- Centered Tab Navigation -->
         <div class="tabs">
-            <button class="tab-btn active" data-tab="intro">📚 Introduction</button>
-            <button class="tab-btn" data-tab="explorer">🔬 Explorer</button>
+            <button class="tab-btn active" data-tab="explorer">🔬 Explorer</button>
+            <button class="tab-btn" data-tab="lab">⚖️ Comparison Test Lab</button>
             <button class="tab-btn" data-tab="challenge">
                 🤝 Challenge with MathPal
+                <svg width="20" height="20" viewBox="0 0 100 100" class="mathpal-icon">
+                    <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
+                    <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
+                    <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
+                    <line x1="50" y1="35" x2="50" y2="25" stroke="#0f766e" stroke-width="2"/>
+                    <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
+                    <circle cx="40" cy="47" r="5" fill="white"/>
+                    <circle cx="60" cy="47" r="5" fill="white"/>
+                    <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                    <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                    <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
+                </svg>
             </button>
         </div>
         
-        <!-- Tab 1: Introduction -->
-        <div id="intro" class="tab-content active">
+        <!-- Explorer Tab -->
+        <div id="explorer" class="tab-content active">
             <div class="hero">
-                <h1>Series: Three Ways to See Infinity</h1>
-                <p>When we add infinitely many numbers, does the sum "settle down" to a value? Let's explore convergence through three complementary views that build your intuition.</p>
+                <h1>Series Explorer: Three Views of Infinity</h1>
+                <p>When we add infinitely many numbers, does the sum "settle down" to a value? Explore convergence through three complementary views.</p>
             </div>
             
             <div class="concept-cards">
                 <div class="card">
                     <div class="card-icon">🔢</div>
                     <h3>Numerical View</h3>
-                    <p>Watch decimal places stabilize for convergent series. Like 0.333... becoming 1/3, convergent series have digits that "calm down" while divergent ones keep changing forever.</p>
+                    <p>Watch the digits of partial sums stabilize (or not!) as more terms are added. Green digits have settled, yellow ones are still changing.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">➡️</div>
                     <h3>Number Line View</h3>
-                    <p>See partial sums hop along a line. Convergent series zero in on a target like a guided missile, while divergent ones wander off to infinity or bounce chaotically.</p>
+                    <p>See partial sums hop along a line. Do they approach a target, or keep moving forever?</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">📊</div>
                     <h3>Staircase View</h3>
-                    <p>Imagine an infinite staircase where each term adds a step up or down. Do we reach a specific floor (converge) or keep climbing/falling forever (diverge)?</p>
+                    <p>Each term adds a step to our staircase. Does it level off at a certain height, or climb endlessly?</p>
                 </div>
             </div>
             
-            <div class="demo-section">
-                <h2 class="demo-title">Quick Interactive Demo</h2>
-                <div class="preset-pills" style="justify-content: center; margin-bottom: 1.5rem;">
-                    <button class="preset-pill active" onclick="loadDemoSeries(event, 'geometric')">Geometric (Converges)</button>
-                    <button class="preset-pill" onclick="loadDemoSeries(event, 'harmonic')">Harmonic (Diverges)</button>
-                    <button class="preset-pill" onclick="loadDemoSeries(event, 'alternating')">Alternating (Converges)</button>
-                </div>
-                <canvas id="demo-canvas" width="800" height="200" style="width: 100%; height: 200px;"></canvas>
-                <div id="demo-formula" style="text-align: center; margin-top: 1rem; font-size: 1.125rem;"></div>
-            </div>
-            
-            <div class="concept-cards">
-                <div class="card">
-                    <div class="card-icon">🎯</div>
-                    <h3>Key Insight: Comparison Tests</h3>
-                    <p>Often we can't calculate a series exactly, but we can compare it to one we understand. If your series is smaller than a convergent one, it converges. If it's bigger than a divergent one, it diverges!</p>
-                </div>
-            </div>
-            
-            <center>
-                <button class="nav-btn" onclick="switchToTab('explorer')">Try the Explorer →</button>
-            </center>
-        </div>
-        
-        <!-- Tab 2: Explorer -->
-        <div id="explorer" class="tab-content">
             <div class="explorer-container">
                 <div class="control-panel">
-                    <div class="preset-section">
-                        <h3>Series Type</h3>
-                        <div class="preset-pills">
-                            <button class="preset-pill active" onclick="loadSeries(event, 'geometric')">Geometric</button>
-                            <button class="preset-pill" onclick="loadSeries(event, 'harmonic')">Harmonic</button>
-                            <button class="preset-pill" onclick="loadSeries(event, 'p-series')">p-Series</button>
-                            <button class="preset-pill" onclick="loadSeries(event, 'alternating')">Alternating</button>
-                            <button class="preset-pill" onclick="loadSeries(event, 'telescoping')">Telescoping</button>
-                        </div>
+                    <h3 style="margin-bottom: 1rem;">Choose a Series Type</h3>
+                    <div class="preset-pills">
+                        <button class="preset-pill active" onclick="loadSeries(event, 'geometric')">Geometric</button>
+                        <button class="preset-pill" onclick="loadSeries(event, 'harmonic')">Harmonic</button>
+                        <button class="preset-pill" onclick="loadSeries(event, 'p-series')">p-Series</button>
+                        <button class="preset-pill" onclick="loadSeries(event, 'alternating')">Alternating</button>
+                        <button class="preset-pill" onclick="loadSeries(event, 'telescoping')">Telescoping</button>
                     </div>
                     
                     <div class="control-group">
@@ -748,7 +367,7 @@
                     </div>
                     
                     <div class="control-group" id="parameterControl">
-                        <label>Parameter (r or p)</label>
+                        <label>Parameter</label>
                         <div class="slider-container">
                             <input type="range" id="paramSlider" min="0.1" max="2" step="0.1" value="0.5">
                             <span class="slider-value" id="paramValue">0.5</span>
@@ -757,23 +376,22 @@
                     
                     <div class="info-display">
                         <div class="info-item">
-                            <span class="info-label">Partial Sum:</span>
+                            <span>Current Sum:</span>
                             <span class="info-value" id="partialSum">0.000</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">Last Term:</span>
-                            <span class="info-value" id="lastTerm">0.000</span>
+                            <span>Status:</span>
+                            <span class="info-value" id="convergenceStatus">Converges</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">Status:</span>
-                            <span class="info-value" id="convergenceStatus">Converges</span>
+                            <span>Formula:</span>
+                            <span class="info-value" id="formulaDisplay">Σ xⁿ</span>
                         </div>
                     </div>
                     
                     <div class="button-group">
-                        <button class="btn btn-primary" onclick="animateSeries(event)">🎬 Animate</button>
+                        <button class="btn btn-primary" onclick="animateSeries(event)">▶ Animate</button>
                         <button class="btn" onclick="resetSeries()">↺ Reset</button>
-                        <button class="btn" onclick="toggleComparison()">⚖️ Compare</button>
                     </div>
                 </div>
                 
@@ -784,64 +402,68 @@
                         <button class="view-btn" onclick="switchView(event, 'staircase')">📊 Staircase</button>
                     </div>
                     
-                    <!-- Numerical View -->
                     <div id="numerical-view" class="view-panel active">
                         <div class="numerical-display">
-                            <div class="sum-display" id="sumDisplay">
-                                <span class="digit-indicator">0</span>.<span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span><span class="digit-indicator">0</span>
-                            </div>
-                            <div style="color: #888; font-size: 0.875rem;">
-                                Watch the digits: Yellow = changing, Green = stabilized
-                            </div>
-                            <div class="terms-list" id="termsList">
-                                <!-- Terms will be listed here -->
-                            </div>
+                            <div class="sum-display" id="sumDisplay">0.00000000</div>
+                            <canvas id="num-canvas" width="800" height="250"></canvas>
                         </div>
                     </div>
                     
-                    <!-- Number Line View -->
                     <div id="numberline-view" class="view-panel">
-                        <canvas id="numberline-canvas" class="numberline-canvas"></canvas>
-                        <canvas id="numberline-detail" class="staircase-canvas"></canvas>
+                        <canvas id="numberline-canvas" width="800" height="400"></canvas>
                     </div>
                     
-                    <!-- Staircase View -->
                     <div id="staircase-view" class="view-panel">
-                        <canvas id="staircase-canvas" class="staircase-canvas"></canvas>
-                    </div>
-                    
-                    <div id="seriesFormula" style="text-align: center; margin-top: 1.5rem; padding: 1rem; background: var(--interactive); border-radius: 8px;"></div>
-                </div>
-            </div>
-            
-            <!-- Comparison Test Panel (initially hidden) -->
-            <div id="comparison-panel" class="comparison-panel" style="display: none;">
-                <h3 class="comparison-title">🔍 Comparison Test</h3>
-                <div class="comparison-series">
-                    <div class="series-box">
-                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Your Series</h4>
-                        <div id="yourSeriesInfo"></div>
-                    </div>
-                    <div class="series-box">
-                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Comparison Series</h4>
-                        <select id="comparisonSelect" onchange="updateComparison()">
-                            <option value="geometric-half">Geometric (r=1/2)</option>
-                            <option value="harmonic">Harmonic (1/n)</option>
-                            <option value="p-2">p-series (p=2)</option>
-                        </select>
-                        <div id="comparisonInfo" style="margin-top: 0.5rem;"></div>
+                        <canvas id="staircase-canvas" width="800" height="400"></canvas>
                     </div>
                 </div>
-                <canvas id="comparison-canvas" width="800" height="300" style="width: 100%; margin-top: 1rem;"></canvas>
             </div>
         </div>
         
-        <!-- Tab 3: Challenge with MathPal -->
+        <!-- Comparison Test Lab Tab -->
+        <div id="lab" class="tab-content">
+            <div class="lab-intro">
+                <h2>The Comparison Test: Your Safety Net</h2>
+                <p>If you know one series converges or diverges, you can use it to prove what happens to another series. But there's a catch – the comparison only works one way!</p>
+            </div>
+            
+            <div class="comparison-scenarios">
+                <div class="scenario-card" onclick="loadLabScenario('ceiling')">
+                    <div class="scenario-icon">📉</div>
+                    <div class="scenario-title">The Ceiling Trap</div>
+                    <div class="scenario-desc">When you're smaller than something that converges, you're trapped below a ceiling. You must converge!</div>
+                </div>
+                
+                <div class="scenario-card" onclick="loadLabScenario('floor')">
+                    <div class="scenario-icon">📈</div>
+                    <div class="scenario-title">The Rising Floor</div>
+                    <div class="scenario-desc">When you're bigger than something that diverges, you're pushed up by a rising floor. You must diverge!</div>
+                </div>
+                
+                <div class="scenario-card" onclick="loadLabScenario('bigger-converge')">
+                    <div class="scenario-icon">🤷</div>
+                    <div class="scenario-title">Bigger but Converges?</div>
+                    <div class="scenario-desc">Being bigger than something small doesn't mean you're big. You might still converge!</div>
+                </div>
+                
+                <div class="scenario-card" onclick="loadLabScenario('smaller-diverge')">
+                    <div class="scenario-icon">🤔</div>
+                    <div class="scenario-title">Smaller but Diverges?</div>
+                    <div class="scenario-desc">Being smaller than infinity tells you nothing. You could still diverge slowly!</div>
+                </div>
+            </div>
+            
+            <div class="lab-visualization">
+                <canvas id="lab-canvas" width="800" height="350"></canvas>
+                <div id="lab-result" class="lab-result"></div>
+            </div>
+        </div>
+        
+        <!-- Challenge with MathPal Tab -->
         <div id="challenge" class="tab-content">
-            <!-- MathPal Disclosure Banner -->
             <div class="ai-disclosure-banner">
                 <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center;">
-                    <svg width="50" height="50" viewBox="0 0 100 100">
+                    <svg width="32" height="32" viewBox="0 0 100 100">
                         <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
                         <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
                         <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
@@ -849,8 +471,8 @@
                         <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
                         <circle cx="40" cy="47" r="5" fill="white"/>
                         <circle cx="60" cy="47" r="5" fill="white"/>
-                        <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
-                        <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                        <circle cx="40" cy="47" r="3" fill="#0f766e"/>
+                        <circle cx="60" cy="47" r="3" fill="#0f766e"/>
                         <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
                     </svg>
                     <div style="text-align: left;">
@@ -865,30 +487,43 @@
             </div>
             
             <div class="problem-display">
-                <h3 style="color: var(--primary); margin-bottom: 1rem;">Today's Challenge</h3>
-                <div id="problemStatement" style="font-size: 1.125rem; margin-bottom: 1rem;"></div>
-                <div id="problemFormula"></div>
+                <h3 style="margin-bottom: 0.5rem;">Does this series converge or diverge?</h3>
+                <div id="problemSeries" style="font-size: 1.5rem; margin-top: 1rem;"></div>
             </div>
             
             <div class="mathpal-workspace">
                 <div class="workspace-section">
                     <div class="workspace-title">
-                        <span>✏️</span>
-                        <span>Your Analysis</span>
+                        📝 Your Analysis
                     </div>
-                    <textarea id="userWork" placeholder="Work through the problem here... Does this series converge? Why?" style="width: 100%; height: 200px; padding: 0.75rem; border: 2px solid var(--interactive); border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                    <div class="work-area">
+                        <textarea id="userWork" placeholder="Work through the problem here...
+
+Try these steps:
+1. What test should I use?
+2. What happens as n → ∞?
+3. Can I compare this to a series I know?"></textarea>
+                    </div>
+                    
                     <div class="hint-buttons">
-                        <button class="hint-btn" onclick="getHint('nudge')">💭 Nudge</button>
-                        <button class="hint-btn" onclick="getHint('observation')">🔍 Observation</button>
-                        <button class="hint-btn" onclick="getHint('collaborate')">🤝 Collaborate</button>
-                        <button class="hint-btn" onclick="getHint('reveal')">💡 Reveal</button>
+                        <button class="hint-btn" onclick="getMathPalHint('nudge')">
+                            💭 Nudge
+                        </button>
+                        <button class="hint-btn" onclick="getMathPalHint('observation')">
+                            🔍 Observation
+                        </button>
+                        <button class="hint-btn" onclick="getMathPalHint('collaborate')">
+                            🤝 Collaborate
+                        </button>
+                        <button class="hint-btn" onclick="getMathPalHint('reveal')">
+                            💡 Reveal
+                        </button>
                     </div>
-                    <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="checkWork()">✓ Check My Work</button>
                 </div>
                 
                 <div class="workspace-section">
                     <div class="workspace-title">
-                        <svg width="24" height="24" viewBox="0 0 100 100">
+                        <svg width="24" height="24" viewBox="0 0 100 100" style="vertical-align: middle;">
                             <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
                             <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
                             <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
@@ -896,32 +531,29 @@
                             <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
                             <circle cx="40" cy="47" r="5" fill="white"/>
                             <circle cx="60" cy="47" r="5" fill="white"/>
-                            <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
-                            <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                            <circle cx="40" cy="47" r="3" fill="#0f766e"/>
+                            <circle cx="60" cy="47" r="3" fill="#0f766e"/>
                             <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
                         </svg>
-                        <span>MathPal's Thinking</span>
+                        MathPal's Thinking
                     </div>
-                    <div class="mathpal-thinking" id="mathpalThinking">
-                        MathPal is thinking...
+                    <div id="mathpalThinking" class="mathpal-thinking">
+                        Hey! I'm looking at this series too. Click a hint button and I'll share what I'm thinking...
                     </div>
-                    <div class="mathpal-response" id="mathpalResponse">
-                        <p style="color: var(--text-muted); font-style: italic;">
-                            Hey! I'm ready to work through this series problem with you. Click one of the hint buttons when you want to compare notes!
-                        </p>
-                    </div>
-                    <button class="btn" style="width: 100%; margin-top: 1rem;" onclick="compareApproaches()">🔄 Compare Methods</button>
+                    <div id="mathpalResponse" class="mathpal-response" style="display: none;"></div>
                 </div>
             </div>
             
-            <center>
-                <button class="nav-btn" onclick="generateNewProblem()">🎲 New Problem</button>
-            </center>
+            <div class="action-buttons">
+                <button class="nav-btn" onclick="checkWork()">✓ Check My Work</button>
+                <button class="nav-btn" onclick="compareApproaches()">🔄 Compare Methods</button>
+                <button class="nav-btn" onclick="newProblem()">🎲 New Problem</button>
+            </div>
         </div>
     </div>
     
     <script>
-        // Global variables
+        // Global Variables
         let currentSeries = 'geometric';
         let currentView = 'numerical';
         let seriesTerms = [];
@@ -929,67 +561,95 @@
         let animationId = null;
         let animationFrame = 0;
         let currentProblem = null;
+        let hintLevel = 0;
+        
+        // Series Problems for Challenge
+        const challengeProblems = [
+            {
+                latex: "\\sum_{n=1}^{\\infty} \\frac{1}{n^2}",
+                converges: true,
+                test: "p-series with p=2",
+                hint1: "What kind of series is this? Look at the exponent...",
+                hint2: "I notice this is 1/n^p. What's p here?",
+                hint3: "Let's work together: p-series converge when p > 1. Here p = 2...",
+                hint4: "I got that this converges! It's a p-series with p = 2 > 1."
+            },
+            {
+                latex: "\\sum_{n=1}^{\\infty} \\frac{1}{\\sqrt{n}}",
+                converges: false,
+                test: "p-series with p=0.5",
+                hint1: "Can you rewrite √n as n to some power?",
+                hint2: "I see √n = n^(1/2), so this is 1/n^(1/2)...",
+                hint3: "Want to check together? For p-series, we need p > 1 to converge...",
+                hint4: "I think this diverges - it's p-series with p = 1/2 < 1."
+            },
+            {
+                latex: "\\sum_{n=1}^{\\infty} \\frac{n}{n^2 + 1}",
+                converges: false,
+                test: "comparison with harmonic",
+                hint1: "What happens to the fraction for large n?",
+                hint2: "I'm thinking... for big n, n^2 + 1 ≈ n^2, so this looks like n/n^2 = 1/n",
+                hint3: "Let's compare: this behaves like 1/n, which is the harmonic series...",
+                hint4: "I compared with 1/n (harmonic). Since harmonic diverges, this should too!"
+            },
+            {
+                latex: "\\sum_{n=1}^{\\infty} \\frac{2^n}{3^n}",
+                converges: true,
+                test: "geometric series",
+                hint1: "Can you simplify this fraction?",
+                hint2: "I noticed 2^n/3^n = (2/3)^n. That looks familiar!",
+                hint3: "Working on it... This is geometric with r = 2/3. Is |r| < 1?",
+                hint4: "I got convergent! It's geometric with r = 2/3, and |2/3| < 1."
+            },
+            {
+                latex: "\\sum_{n=1}^{\\infty} \\frac{\\ln(n)}{n}",
+                converges: false,
+                test: "integral test",
+                hint1: "The ln(n) makes this tricky. Maybe try the integral test?",
+                hint2: "I'm trying to compare with 1/n... but ln(n)/n > 1/n for large n",
+                hint3: "Let's think: since ln(n) grows (slowly), this is worse than harmonic...",
+                hint4: "I used integral test: ∫ln(x)/x dx = (ln x)^2/2 → ∞. Diverges!"
+            }
+        ];
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up event listeners
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tabId = btn.dataset.tab;
-                    switchToTab(tabId);
-                });
+                btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
             });
             
-            document.getElementById('termsSlider').addEventListener('input', function(e) {
+            document.getElementById('termsSlider').addEventListener('input', (e) => {
                 document.getElementById('termsValue').textContent = e.target.value;
                 updateSeries();
             });
             
-            document.getElementById('paramSlider').addEventListener('input', function(e) {
+            document.getElementById('paramSlider').addEventListener('input', (e) => {
                 document.getElementById('paramValue').textContent = e.target.value;
                 updateSeries();
             });
             
-            // Initialize displays
             updateSeries();
-            generateNewProblem();
-            initializeDemo();
-            
-            // Render initial formulas after KaTeX loads
-            setTimeout(() => {
-                if (typeof katex !== 'undefined') {
-                    updateFormulas();
-                }
-            }, 100);
+            newProblem();
         });
         
+        // Tab Navigation
         function switchToTab(tabId) {
-            // Update buttons
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-            
-            // Update content
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
+            
+            if (tabId === 'explorer' && currentView === 'numerical') {
+                setTimeout(() => drawNumericalView(), 100);
+            }
         }
         
-        function switchView(event, view) {
-            currentView = view;
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(`${view}-view`).classList.add('active');
-            
-            drawCurrentView();
-        }
-        
+        // Explorer Functions
         function loadSeries(event, type) {
             currentSeries = type;
             document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Show/hide parameter control based on series type
             const paramControl = document.getElementById('parameterControl');
             const paramSlider = document.getElementById('paramSlider');
             const label = paramControl.querySelector('label');
@@ -1015,48 +675,39 @@
                     paramControl.style.display = 'none';
             }
             
+            document.getElementById('paramValue').textContent = paramSlider.value;
             updateSeries();
         }
         
         function generateSeriesTerms(type, n, param) {
             const terms = [];
-            
-            switch(type) {
-                case 'geometric':
-                    for (let i = 0; i < n; i++) {
-                        terms.push(Math.pow(param, i));
-                    }
-                    break;
-                case 'harmonic':
-                    for (let i = 1; i <= n; i++) {
-                        terms.push(1 / i);
-                    }
-                    break;
-                case 'p-series':
-                    for (let i = 1; i <= n; i++) {
-                        terms.push(1 / Math.pow(i, param));
-                    }
-                    break;
-                case 'alternating':
-                    for (let i = 1; i <= n; i++) {
-                        terms.push(Math.pow(-1, i+1) / i);
-                    }
-                    break;
-                case 'telescoping':
-                    for (let i = 1; i <= n; i++) {
+            for (let i = 1; i <= n; i++) {
+                switch(type) {
+                    case 'geometric':
+                        terms.push(Math.pow(param, i-1));
+                        break;
+                    case 'harmonic':
+                        terms.push(1/i);
+                        break;
+                    case 'p-series':
+                        terms.push(1/Math.pow(i, param));
+                        break;
+                    case 'alternating':
+                        terms.push(Math.pow(-1, i+1)/i);
+                        break;
+                    case 'telescoping':
                         terms.push(1/i - 1/(i+1));
-                    }
-                    break;
+                        break;
+                }
             }
-            
             return terms;
         }
         
         function calculatePartialSums(terms) {
-            const sums = [0];
+            const sums = [];
             let sum = 0;
-            for (let i = 0; i < terms.length; i++) {
-                sum += terms[i];
+            for (let term of terms) {
+                sum += term;
                 sums.push(sum);
             }
             return sums;
@@ -1069,53 +720,56 @@
             seriesTerms = generateSeriesTerms(currentSeries, n, param);
             partialSums = calculatePartialSums(seriesTerms);
             
-            // Update info display
-            const lastSum = partialSums.length > 0 ? partialSums[partialSums.length - 1] : 0;
-            const lastTerm = seriesTerms.length > 0 ? seriesTerms[seriesTerms.length - 1] : 0;
+            // Update displays
+            const lastSum = partialSums[partialSums.length - 1];
+            document.getElementById('partialSum').textContent = lastSum.toFixed(6);
             
-            const partialSumEl = document.getElementById('partialSum');
-            const lastTermEl = document.getElementById('lastTerm');
-            const convergenceStatusEl = document.getElementById('convergenceStatus');
-            
-            if (partialSumEl) partialSumEl.textContent = lastSum.toFixed(6);
-            if (lastTermEl) lastTermEl.textContent = Math.abs(lastTerm).toExponential(3);
-            
-            // Determine convergence
-            let status = 'Unknown';
+            // Update convergence status
+            let status = 'Analyzing...';
+            let formula = '';
             switch(currentSeries) {
                 case 'geometric':
-                    status = param < 1 ? 'Converges' : 'Diverges';
+                    status = param < 1 ? 'Converges' : (param === 1 ? 'Diverges' : 'Diverges');
+                    formula = `Σ (${param.toFixed(1)})ⁿ`;
                     break;
                 case 'harmonic':
                     status = 'Diverges';
+                    formula = 'Σ 1/n';
                     break;
                 case 'p-series':
                     status = param > 1 ? 'Converges' : 'Diverges';
+                    formula = `Σ 1/n^${param.toFixed(1)}`;
                     break;
                 case 'alternating':
                     status = 'Converges';
+                    formula = 'Σ (-1)ⁿ⁺¹/n';
                     break;
                 case 'telescoping':
                     status = 'Converges to 1';
+                    formula = 'Σ (1/n - 1/(n+1))';
                     break;
             }
-            if (convergenceStatusEl) convergenceStatusEl.textContent = status;
+            document.getElementById('convergenceStatus').textContent = status;
+            document.getElementById('formulaDisplay').textContent = formula;
             
-            // Set animation frame if not already set
-            if (animationFrame === 0 && partialSums.length > 0) {
-                animationFrame = partialSums.length - 1;
-            }
+            // Draw current view
+            drawCurrentView();
+        }
+        
+        function switchView(event, view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(`${view}-view`).classList.add('active');
             
             drawCurrentView();
-            updateFormulas();
         }
         
         function drawCurrentView() {
-            if (!partialSums || partialSums.length === 0) return;
-            
             switch(currentView) {
                 case 'numerical':
-                    updateNumericalView();
+                    drawNumericalView();
                     break;
                 case 'numberline':
                     drawNumberLine();
@@ -1126,65 +780,102 @@
             }
         }
         
-        function updateNumericalView() {
-            if (!partialSums || partialSums.length === 0) return;
-            
-            const sum = partialSums[partialSums.length - 1];
-            const sumStr = sum.toFixed(8);
-            const digits = sumStr.split('');
-            
+        function drawNumericalView() {
             const display = document.getElementById('sumDisplay');
+            const canvas = document.getElementById('num-canvas');
+            
+            if (!canvas || !canvas.offsetParent) return;
+            
+            const idx = Math.min(animationFrame || partialSums.length - 1, partialSums.length - 1);
+            const sum = partialSums[idx] || 0;
+            const sumStr = sum.toFixed(8);
+            
+            // Update digit display
             display.innerHTML = '';
+            const prevSum = idx > 0 ? partialSums[idx-1].toFixed(8) : '0.00000000';
             
-            // Check digit stability (simplified for demo)
-            const prevSum = partialSums.length > 1 ? partialSums[partialSums.length - 2] : 0;
-            const prevStr = prevSum.toFixed(8);
-            
-            digits.forEach((digit, i) => {
+            sumStr.split('').forEach((digit, i) => {
                 const span = document.createElement('span');
                 span.className = 'digit-indicator';
-                span.textContent = digit;
-                
-                if (prevStr[i] !== digit && digit !== '.') {
-                    span.classList.add('changing');
-                } else if (digit !== '.') {
+                if (digit === '.') {
+                    span.textContent = digit;
+                } else if (i < prevSum.length && digit === prevSum[i]) {
                     span.classList.add('stable');
+                    span.textContent = digit;
+                } else {
+                    span.classList.add('changing');
+                    span.textContent = digit;
                 }
-                
                 display.appendChild(span);
             });
             
-            // Update terms list
-            const termsList = document.getElementById('termsList');
-            termsList.innerHTML = '';
-            seriesTerms.slice(-10).reverse().forEach((term, i) => {
-                const index = seriesTerms.length - i;
-                const line = document.createElement('div');
-                line.textContent = `Term ${index}: ${term.toExponential(3)}`;
-                termsList.appendChild(line);
-            });
+            // Draw canvas graph
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 250;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (partialSums.length === 0) return;
+            
+            const padding = 40;
+            const width = canvas.width - 2*padding;
+            const height = canvas.height - 2*padding;
+            
+            const maxSum = Math.max(...partialSums);
+            const minSum = Math.min(0, ...partialSums);
+            const range = maxSum - minSum || 1;
+            
+            // Draw axes
+            ctx.strokeStyle = '#444';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Draw series
+            ctx.strokeStyle = '#0f0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            for (let i = 0; i <= idx; i++) {
+                const x = padding + (i / (partialSums.length - 1)) * width;
+                const y = canvas.height - padding - ((partialSums[i] - minSum) / range) * height;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+            
+            // Draw current point
+            if (idx >= 0) {
+                const x = padding + (idx / (partialSums.length - 1)) * width;
+                const y = canvas.height - padding - ((partialSums[idx] - minSum) / range) * height;
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
         
         function drawNumberLine() {
             const canvas = document.getElementById('numberline-canvas');
-            const ctx = canvas.getContext('2d');
-            const detailCanvas = document.getElementById('numberline-detail');
-            const detailCtx = detailCanvas.getContext('2d');
+            if (!canvas || !canvas.offsetParent) return;
             
-            // Set canvas size
             canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            detailCanvas.width = detailCanvas.offsetWidth;
-            detailCanvas.height = detailCanvas.offsetHeight;
-            
-            // Clear
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            detailCtx.clearRect(0, 0, detailCanvas.width, detailCanvas.height);
             
-            // Draw main number line
-            const padding = 40;
             const lineY = canvas.height / 2;
+            const padding = 40;
             
+            // Draw number line
             ctx.strokeStyle = '#ddd';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -1192,99 +883,76 @@
             ctx.lineTo(canvas.width - padding, lineY);
             ctx.stroke();
             
-            // Find range
-            const minSum = Math.min(0, ...partialSums);
-            const maxSum = Math.max(...partialSums);
-            const range = maxSum - minSum || 1;
+            if (partialSums.length === 0) return;
             
-            // Draw partial sums as hops
-            const xScale = (canvas.width - 2 * padding) / range;
+            const min = Math.min(0, ...partialSums);
+            const max = Math.max(...partialSums);
+            const range = max - min || 1;
+            const scale = (canvas.width - 2*padding) / range;
             
-            ctx.strokeStyle = '#0f766e';
-            ctx.fillStyle = '#0f766e';
+            // Draw tick marks and labels
+            ctx.fillStyle = '#666';
+            ctx.font = '12px monospace';
+            ctx.textAlign = 'center';
             
-            for (let i = 0; i <= animationFrame && i < partialSums.length; i++) {
-                const x = padding + (partialSums[i] - minSum) * xScale;
+            for (let i = 0; i <= 5; i++) {
+                const value = min + (range * i / 5);
+                const x = padding + ((value - min) * scale);
                 
-                // Draw point
                 ctx.beginPath();
-                ctx.arc(x, lineY, 4, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.moveTo(x, lineY - 5);
+                ctx.lineTo(x, lineY + 5);
+                ctx.stroke();
                 
-                // Draw hop arc
+                ctx.fillText(value.toFixed(2), x, lineY + 20);
+            }
+            
+            // Draw partial sums
+            const idx = animationFrame || partialSums.length - 1;
+            
+            for (let i = 0; i <= idx; i++) {
+                const x = padding + ((partialSums[i] - min) * scale);
+                
+                // Draw arrow from previous
                 if (i > 0) {
-                    const prevX = padding + (partialSums[i-1] - minSum) * xScale;
-                    ctx.strokeStyle = seriesTerms[i-1] > 0 ? '#10b981' : '#c62828';
-                    ctx.lineWidth = 2;
+                    const prevX = padding + ((partialSums[i-1] - min) * scale);
+                    ctx.strokeStyle = 'rgba(15, 118, 110, 0.3)';
+                    ctx.lineWidth = 1;
                     ctx.beginPath();
                     ctx.moveTo(prevX, lineY);
-                    ctx.quadraticCurveTo(
-                        (prevX + x) / 2, 
-                        lineY - Math.abs(x - prevX) * 0.3,
-                        x, lineY
-                    );
+                    
+                    const midX = (prevX + x) / 2;
+                    const arcHeight = 30;
+                    ctx.quadraticCurveTo(midX, lineY - arcHeight, x, lineY);
                     ctx.stroke();
-                }
-            }
-            
-            // Draw detailed view
-            drawDetailedNumberLine(detailCtx, detailCanvas.width, detailCanvas.height);
-        }
-        
-        function drawDetailedNumberLine(ctx, width, height) {
-            const padding = 40;
-            
-            // Draw axes
-            ctx.strokeStyle = '#ddd';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(padding, height - padding);
-            ctx.lineTo(width - padding, height - padding);
-            ctx.moveTo(padding, padding);
-            ctx.lineTo(padding, height - padding);
-            ctx.stroke();
-            
-            if (partialSums.length < 2) return;
-            
-            // Plot partial sums
-            const xStep = (width - 2 * padding) / (partialSums.length - 1);
-            const minY = Math.min(...partialSums);
-            const maxY = Math.max(...partialSums);
-            const yScale = (height - 2 * padding) / (maxY - minY || 1);
-            
-            ctx.strokeStyle = '#0f766e';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            
-            for (let i = 0; i <= animationFrame && i < partialSums.length; i++) {
-                const x = padding + i * xStep;
-                const y = height - padding - (partialSums[i] - minY) * yScale;
-                
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
                 }
                 
                 // Draw point
-                ctx.fillStyle = '#0f766e';
+                ctx.fillStyle = i === idx ? '#0f766e' : '#10b98133';
                 ctx.beginPath();
-                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.arc(x, lineY, i === idx ? 6 : 4, 0, Math.PI * 2);
                 ctx.fill();
             }
-            ctx.stroke();
         }
         
         function drawStaircase() {
             const canvas = document.getElementById('staircase-canvas');
-            const ctx = canvas.getContext('2d');
+            if (!canvas || !canvas.offsetParent) return;
             
             canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
+            if (partialSums.length === 0) return;
+            
             const padding = 40;
+            const width = canvas.width - 2*padding;
+            const height = canvas.height - 2*padding;
+            
+            const maxSum = Math.max(...partialSums);
+            const xStep = width / partialSums.length;
+            const yScale = height / (maxSum || 1);
             
             // Draw axes
             ctx.strokeStyle = '#ddd';
@@ -1295,63 +963,35 @@
             ctx.lineTo(canvas.width - padding, canvas.height - padding);
             ctx.stroke();
             
-            if (partialSums.length < 2) return;
-            
-            // Calculate scales
-            const xStep = (canvas.width - 2 * padding) / Math.max(partialSums.length - 1, 1);
-            const minY = Math.min(0, ...partialSums);
-            const maxY = Math.max(...partialSums);
-            const yRange = maxY - minY || 1;
-            const yScale = (canvas.height - 2 * padding) / yRange;
-            
-            // Draw zero line
-            if (minY < 0 && maxY > 0) {
-                ctx.strokeStyle = '#f0f0f0';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                const zeroY = canvas.height - padding + minY * yScale;
-                ctx.moveTo(padding, zeroY);
-                ctx.lineTo(canvas.width - padding, zeroY);
-                ctx.stroke();
-            }
-            
             // Draw staircase
-            const framesToShow = Math.min(animationFrame + 1, partialSums.length);
+            ctx.strokeStyle = '#0f766e';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
             
-            for (let i = 1; i < framesToShow; i++) {
-                const prevX = padding + (i - 1) * xStep;
-                const x = padding + i * xStep;
-                const prevY = canvas.height - padding - (partialSums[i - 1] - minY) * yScale;
-                const y = canvas.height - padding - (partialSums[i] - minY) * yScale;
+            const idx = animationFrame || partialSums.length - 1;
+            
+            let prevX = padding;
+            let prevY = canvas.height - padding;
+            
+            ctx.moveTo(prevX, prevY);
+            
+            for (let i = 0; i <= idx; i++) {
+                const x = padding + (i + 1) * xStep;
+                const y = canvas.height - padding - (partialSums[i] * yScale);
                 
-                // Color based on term sign
-                ctx.strokeStyle = seriesTerms[i - 1] > 0 ? '#10b981' : '#c62828';
-                ctx.lineWidth = 2;
-                
-                // Draw step
-                ctx.beginPath();
-                ctx.moveTo(prevX, prevY);
+                // Horizontal line
                 ctx.lineTo(x, prevY);
+                // Vertical line
                 ctx.lineTo(x, y);
-                ctx.stroke();
                 
-                // Draw point
-                ctx.fillStyle = '#0f766e';
-                ctx.beginPath();
-                ctx.arc(x, y, 3, 0, Math.PI * 2);
-                ctx.fill();
+                prevX = x;
+                prevY = y;
             }
+            ctx.stroke();
             
-            // Draw labels
-            ctx.fillStyle = '#4b5563';
-            ctx.font = '12px sans-serif';
-            ctx.fillText('n →', canvas.width / 2, canvas.height - 10);
-            
-            ctx.save();
-            ctx.translate(15, canvas.height / 2);
-            ctx.rotate(-Math.PI / 2);
-            ctx.fillText('Partial Sum', 0, 0);
-            ctx.restore();
+            // Fill the area under the staircase
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+            ctx.fill();
         }
         
         function animateSeries(event) {
@@ -1360,90 +1000,95 @@
             if (animationId) {
                 clearInterval(animationId);
                 animationId = null;
-                btn.textContent = '🎬 Animate';
-                animationFrame = partialSums.length - 1;
-            } else {
-                animationFrame = 0;
-                btn.textContent = '⏸ Pause';
-                
-                animationId = setInterval(() => {
-                    if (animationFrame < partialSums.length - 1) {
-                        animationFrame++;
-                        drawCurrentView();
-                    } else {
-                        clearInterval(animationId);
-                        animationId = null;
-                        btn.textContent = '🎬 Animate';
-                    }
-                }, 200);
+                btn.textContent = '▶ Animate';
+                return;
             }
+            
+            animationFrame = 0;
+            btn.textContent = '⏸ Pause';
+            
+            animationId = setInterval(() => {
+                if (animationFrame < partialSums.length - 1) {
+                    animationFrame++;
+                    drawCurrentView();
+                } else {
+                    clearInterval(animationId);
+                    animationId = null;
+                    btn.textContent = '▶ Animate';
+                }
+            }, 200);
         }
         
         function resetSeries() {
             if (animationId) {
                 clearInterval(animationId);
                 animationId = null;
-                document.querySelector('.btn-primary').textContent = '🎬 Animate';
+                document.querySelector('.btn-primary').textContent = '▶ Animate';
             }
             animationFrame = partialSums.length - 1;
-            document.getElementById('termsSlider').value = 20;
-            document.getElementById('termsValue').textContent = '20';
             updateSeries();
         }
         
-        function toggleComparison() {
-            const panel = document.getElementById('comparison-panel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            if (panel.style.display === 'block') {
-                updateComparison();
-            }
-        }
-        
-        function updateComparison() {
-            // Update comparison info
-            const yourInfo = document.getElementById('yourSeriesInfo');
-            const compInfo = document.getElementById('comparisonInfo');
+        // Comparison Lab Functions
+        function loadLabScenario(scenario) {
+            document.querySelectorAll('.scenario-card').forEach(card => card.classList.remove('active'));
+            event.target.closest('.scenario-card').classList.add('active');
             
-            yourInfo.innerHTML = `
-                <div>Type: ${currentSeries}</div>
-                <div>Sum: ${partialSums[partialSums.length - 1].toFixed(4)}</div>
-            `;
-            
-            const compType = document.getElementById('comparisonSelect').value;
-            let compTerms = [];
-            
-            if (compType === 'geometric-half') {
-                compTerms = generateSeriesTerms('geometric', seriesTerms.length, 0.5);
-            } else if (compType === 'harmonic') {
-                compTerms = generateSeriesTerms('harmonic', seriesTerms.length, null);
-            } else {
-                compTerms = generateSeriesTerms('p-series', seriesTerms.length, 2);
-            }
-            
-            const compSums = calculatePartialSums(compTerms);
-            compInfo.innerHTML = `Sum: ${compSums[compSums.length - 1].toFixed(4)}`;
-            
-            // Draw comparison chart
-            drawComparisonChart(compSums);
-        }
-        
-        function drawComparisonChart(compSums) {
-            const canvas = document.getElementById('comparison-canvas');
+            const canvas = document.getElementById('lab-canvas');
             const ctx = canvas.getContext('2d');
+            const result = document.getElementById('lab-result');
             
             canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            canvas.height = 350;
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             const padding = 40;
-            const n = Math.max(partialSums.length, compSums.length);
-            const xStep = (canvas.width - 2 * padding) / (n - 1);
+            const width = canvas.width - 2*padding;
+            const height = canvas.height - 2*padding;
             
-            const allSums = [...partialSums, ...compSums];
-            const minY = Math.min(...allSums);
-            const maxY = Math.max(...allSums);
-            const yScale = (canvas.height - 2 * padding) / (maxY - minY || 1);
+            let series1 = []; // Comparison series (orange)
+            let series2 = []; // Our series (teal)
+            let resultText = '';
+            let resultClass = '';
+            
+            // Generate data based on scenario
+            for (let n = 1; n <= 50; n++) {
+                switch(scenario) {
+                    case 'ceiling':
+                        series1.push(3 * (1 - Math.pow(0.5, n))); // Converges to 3
+                        series2.push(2 * (1 - Math.pow(0.6, n))); // Converges to 2, always smaller
+                        resultText = "✓ <strong>Valid comparison!</strong> The teal series (ours) is always smaller than the orange series (comparison). Since the orange converges, the teal is trapped below this ceiling and must converge too!";
+                        resultClass = 'valid';
+                        break;
+                    
+                    case 'floor':
+                        series1.push(Math.log(n + 1)); // Diverges (slowly)
+                        series2.push(Math.sqrt(n)); // Diverges faster
+                        resultText = "✓ <strong>Valid comparison!</strong> The teal series (ours) is always larger than the orange series (comparison). Since the orange diverges, the teal is pushed up by this rising floor and must diverge too!";
+                        resultClass = 'valid';
+                        break;
+                    
+                    case 'bigger-converge':
+                        series1.push(1 * (1 - Math.pow(0.3, n))); // Converges to 1
+                        series2.push(2 * (1 - Math.pow(0.7, n))); // Converges to 2, but bigger
+                        resultText = "⚠️ <strong>Can't conclude!</strong> The teal series is bigger than the orange (which converges). But being bigger than something small doesn't mean you're infinite. In this case, the teal series also converges (to a larger value).";
+                        resultClass = 'invalid';
+                        break;
+                    
+                    case 'smaller-diverge':
+                        series1.push(n); // Diverges quickly
+                        series2.push(Math.log(n + 1)); // Diverges slowly, always smaller
+                        resultText = "⚠️ <strong>Can't conclude!</strong> The teal series is smaller than the orange (which diverges). But being smaller than infinity tells you nothing - you could still diverge slowly, or you might converge. Here, the teal actually diverges too, just more slowly!";
+                        resultClass = 'invalid';
+                        break;
+                }
+            }
+            
+            // Draw the graph
+            const maxVal = Math.max(...series1, ...series2);
+            const yScale = height / maxVal;
+            const xStep = width / 50;
             
             // Draw axes
             ctx.strokeStyle = '#ddd';
@@ -1454,293 +1099,122 @@
             ctx.lineTo(canvas.width - padding, canvas.height - padding);
             ctx.stroke();
             
-            // Draw your series
-            ctx.strokeStyle = '#0f766e';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            for (let i = 0; i < partialSums.length; i++) {
-                const x = padding + i * xStep;
-                const y = canvas.height - padding - (partialSums[i] - minY) * yScale;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-            
-            // Draw comparison series
+            // Draw comparison series (orange)
             ctx.strokeStyle = '#f59e0b';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            for (let i = 0; i < compSums.length; i++) {
+            for (let i = 0; i < series1.length; i++) {
                 const x = padding + i * xStep;
-                const y = canvas.height - padding - (compSums[i] - minY) * yScale;
+                const y = canvas.height - padding - (series1[i] * yScale);
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
             
-            // Legend
-            ctx.font = '12px sans-serif';
-            ctx.fillStyle = '#0f766e';
-            ctx.fillText('Your Series', padding, 20);
-            ctx.fillStyle = '#f59e0b';
-            ctx.fillText('Comparison', padding + 100, 20);
-        }
-        
-        function updateFormulas() {
-            if (typeof katex === 'undefined') {
-                setTimeout(updateFormulas, 100);
-                return;
-            }
-            
-            const formulaDiv = document.getElementById('seriesFormula');
-            let formula = '';
-            
-            switch(currentSeries) {
-                case 'geometric':
-                    const paramSlider = document.getElementById('paramSlider');
-                    const r = paramSlider ? paramSlider.value : '0.5';
-                    formula = `\\sum_{n=0}^{\\infty} r^n = \\sum_{n=0}^{\\infty} (${r})^n`;
-                    if (parseFloat(r) < 1) {
-                        formula += ` = \\frac{1}{1-${r}} \\approx ${(1/(1-parseFloat(r))).toFixed(3)}`;
-                    }
-                    break;
-                case 'harmonic':
-                    formula = '\\sum_{n=1}^{\\infty} \\frac{1}{n} \\to \\infty \\text{ (diverges)}';
-                    break;
-                case 'p-series':
-                    const paramSlider2 = document.getElementById('paramSlider');
-                    const p = paramSlider2 ? paramSlider2.value : '1.5';
-                    formula = `\\sum_{n=1}^{\\infty} \\frac{1}{n^${p}}`;
-                    if (parseFloat(p) > 1) {
-                        formula += ' \\text{ (converges)}';
-                    } else {
-                        formula += ' \\text{ (diverges)}';
-                    }
-                    break;
-                case 'alternating':
-                    formula = '\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = \\ln(2) \\approx 0.693';
-                    break;
-                case 'telescoping':
-                    formula = '\\sum_{n=1}^{\\infty} \\left(\\frac{1}{n} - \\frac{1}{n+1}\\right) = 1';
-                    break;
-            }
-            
-            if (formulaDiv) {
-                katex.render(formula, formulaDiv, { displayMode: true });
-            }
-            
-            // Update demo formula
-            const demoFormula = document.getElementById('demo-formula');
-            if (demoFormula && demoFormula.dataset.series) {
-                let demoTex = '';
-                switch(demoFormula.dataset.series) {
-                    case 'geometric':
-                        demoTex = '\\sum_{n=0}^{\\infty} \\left(\\frac{1}{2}\\right)^n = 2';
-                        break;
-                    case 'harmonic':
-                        demoTex = '\\sum_{n=1}^{\\infty} \\frac{1}{n} \\to \\infty';
-                        break;
-                    case 'alternating':
-                        demoTex = '\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} = \\ln(2)';
-                        break;
-                }
-                katex.render(demoTex, demoFormula, { displayMode: true });
-            }
-            
-            // Update problem formula
-            if (currentProblem && document.getElementById('problemFormula')) {
-                katex.render(currentProblem.formula, document.getElementById('problemFormula'), { displayMode: true });
-            }
-        }
-        
-        // Demo functions
-        function initializeDemo() {
-            const canvas = document.getElementById('demo-canvas');
-            if (!canvas) return;
-            
-            loadDemoSeries('geometric');
-        }
-        
-        function loadDemoSeries(eventOrType, type) {
-            // Handle both event-driven calls and programmatic calls
-            if (typeof eventOrType === 'string') {
-                type = eventOrType;
-                // No event, so we'll manually set the active pill
-                document.querySelectorAll('.demo-section .preset-pill').forEach(p => {
-                    p.classList.remove('active');
-                    if (p.textContent.toLowerCase().includes(type)) {
-                        p.classList.add('active');
-                    }
-                });
-            } else {
-                // Event-driven call
-                document.querySelectorAll('.demo-section .preset-pill').forEach(p => p.classList.remove('active'));
-                eventOrType.target.classList.add('active');
-            }
-            
-            const canvas = document.getElementById('demo-canvas');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            
-            let terms = [];
-            switch(type) {
-                case 'geometric':
-                    terms = generateSeriesTerms('geometric', 30, 0.5);
-                    break;
-                case 'harmonic':
-                    terms = generateSeriesTerms('harmonic', 30, null);
-                    break;
-                case 'alternating':
-                    terms = generateSeriesTerms('alternating', 30, null);
-                    break;
-            }
-            
-            const sums = calculatePartialSums(terms);
-            
-            // Draw simple visualization
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const padding = 20;
-            const xStep = (canvas.width - 2 * padding) / (sums.length - 1);
-            const minY = Math.min(...sums);
-            const maxY = Math.max(...sums);
-            const yScale = (canvas.height - 2 * padding) / (maxY - minY || 1);
-            
+            // Draw our series (teal)
             ctx.strokeStyle = '#0f766e';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            
-            for (let i = 0; i < sums.length; i++) {
+            for (let i = 0; i < series2.length; i++) {
                 const x = padding + i * xStep;
-                const y = canvas.height - padding - (sums[i] - minY) * yScale;
-                
+                const y = canvas.height - padding - (series2[i] * yScale);
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
             
-            // Update formula
-            const formulaDiv = document.getElementById('demo-formula');
-            formulaDiv.dataset.series = type;
-            updateFormulas();
-        }
-        
-        // Challenge/MathPal functions
-        function generateNewProblem() {
-            const problems = [
-                {
-                    statement: "Does this series converge or diverge?",
-                    formula: "\\sum_{n=1}^{\\infty} \\frac{\\ln(n)}{n^2}",
-                    answer: "converges",
-                    hint: "Compare with p-series where p=2"
-                },
-                {
-                    statement: "Determine if this series converges:",
-                    formula: "\\sum_{n=1}^{\\infty} \\frac{n}{n^2 + 1}",
-                    answer: "diverges",
-                    hint: "Compare with harmonic series"
-                },
-                {
-                    statement: "What can you say about this series?",
-                    formula: "\\sum_{n=1}^{\\infty} \\frac{(-1)^n}{\\sqrt{n}}",
-                    answer: "converges conditionally",
-                    hint: "Check alternating series test"
-                },
-                {
-                    statement: "Does this geometric-like series converge?",
-                    formula: "\\sum_{n=0}^{\\infty} \\frac{2^n}{3^n}",
-                    answer: "converges to 3",
-                    hint: "This is geometric with r=2/3"
-                }
-            ];
+            // Add legend
+            ctx.font = '14px sans-serif';
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillText('Comparison Series', canvas.width - 150, 30);
+            ctx.fillStyle = '#0f766e';
+            ctx.fillText('Our Series', canvas.width - 150, 50);
             
-            currentProblem = problems[Math.floor(Math.random() * problems.length)];
-            document.getElementById('problemStatement').textContent = currentProblem.statement;
-            updateFormulas();
+            // Show result
+            result.innerHTML = resultText;
+            result.className = `lab-result ${resultClass}`;
+            result.style.display = 'block';
         }
         
-        function getHint(level) {
+        // MathPal Challenge Functions
+        function newProblem() {
+            currentProblem = challengeProblems[Math.floor(Math.random() * challengeProblems.length)];
+            hintLevel = 0;
+            
+            // Update display
+            if (typeof katex !== 'undefined') {
+                katex.render(currentProblem.latex, document.getElementById('problemSeries'), {displayMode: true});
+            } else {
+                document.getElementById('problemSeries').innerHTML = currentProblem.latex;
+            }
+            
+            // Reset workspace
+            document.getElementById('userWork').value = '';
+            document.getElementById('mathpalThinking').textContent = "Hey! I'm looking at this series too. Click a hint button and I'll share what I'm thinking...";
+            document.getElementById('mathpalThinking').className = 'mathpal-thinking';
+            document.getElementById('mathpalResponse').style.display = 'none';
+            
+            // Enable all hint buttons
+            document.querySelectorAll('.hint-btn').forEach(btn => btn.disabled = false);
+        }
+        
+        async function getMathPalHint(type) {
+            const thinking = document.getElementById('mathpalThinking');
             const response = document.getElementById('mathpalResponse');
-            showMathPalThinking();
             
-            setTimeout(() => {
-                hideMathPalThinking();
-                
-                let hint = '';
-                switch(level) {
-                    case 'nudge':
-                        hint = "Hmm, I'm looking at the general term... What test might work here?";
-                        break;
-                    case 'observation':
-                        hint = `I notice ${currentProblem.hint}. That's making me think about comparison...`;
-                        break;
-                    case 'collaborate':
-                        hint = `Let's work together! I tried the comparison test and got that it ${currentProblem.answer}. What method did you use?`;
-                        break;
-                    case 'reveal':
-                        hint = `I got that it ${currentProblem.answer}! Here's my approach: ${currentProblem.hint}. Want to compare our work?`;
-                        break;
-                }
-                
-                response.innerHTML = `<p style="color: var(--text-primary);">${hint}</p>`;
-            }, 1000);
+            // Show thinking animation
+            thinking.className = 'mathpal-thinking active';
+            thinking.textContent = 'Let me think about this...';
+            
+            // Simulate API call with fallback
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            let hint = '';
+            switch(type) {
+                case 'nudge':
+                    hint = currentProblem.hint1;
+                    break;
+                case 'observation':
+                    hint = currentProblem.hint2;
+                    break;
+                case 'collaborate':
+                    hint = currentProblem.hint3;
+                    break;
+                case 'reveal':
+                    hint = currentProblem.hint4;
+                    break;
+            }
+            
+            // Show response
+            thinking.className = 'mathpal-thinking';
+            thinking.textContent = '';
+            response.style.display = 'block';
+            response.innerHTML = `<strong>MathPal:</strong> ${hint}`;
+            
+            // Disable used button
+            event.target.disabled = true;
         }
         
-        function checkWork() {
+        async function checkWork() {
             const userWork = document.getElementById('userWork').value;
             const response = document.getElementById('mathpalResponse');
             
             if (!userWork.trim()) {
-                response.innerHTML = '<p style="color: var(--text-muted);">Hey, write down your thoughts first! I want to see your approach.</p>';
+                response.style.display = 'block';
+                response.innerHTML = "<strong>MathPal:</strong> Want to give it a try first? I'm here to help when you need me!";
                 return;
             }
             
-            showMathPalThinking();
-            
-            setTimeout(() => {
-                hideMathPalThinking();
-                
-                const feedback = userWork.toLowerCase().includes(currentProblem.answer.split(' ')[0]) 
-                    ? `Nice! I got the same answer - it ${currentProblem.answer}. Your reasoning looks solid!`
-                    : `Interesting approach! I got something different though. Want to compare methods?`;
-                
-                response.innerHTML = `<p style="color: var(--text-primary);">${feedback}</p>`;
-            }, 1500);
+            // Simulate checking
+            response.style.display = 'block';
+            response.innerHTML = `<strong>MathPal:</strong> Let me check what you've got... ${currentProblem.converges ? "I also got that it converges!" : "I think it diverges too!"} Want to compare our methods?`;
         }
         
-        function compareApproaches() {
+        async function compareApproaches() {
             const response = document.getElementById('mathpalResponse');
-            showMathPalThinking();
-            
-            setTimeout(() => {
-                hideMathPalThinking();
-                response.innerHTML = `
-                    <p style="color: var(--text-primary);">
-                        Here's how I approached it: ${currentProblem.hint}. 
-                        This led me to conclude it ${currentProblem.answer}. 
-                        Your method might be different but equally valid - that's the beauty of math!
-                    </p>
-                `;
-            }, 1000);
+            response.style.display = 'block';
+            response.innerHTML = `<strong>MathPal:</strong> I used the ${currentProblem.test}. ${currentProblem.hint4} What approach did you take?`;
         }
-        
-        function showMathPalThinking() {
-            document.getElementById('mathpalThinking').classList.add('active');
-        }
-        
-        function hideMathPalThinking() {
-            document.getElementById('mathpalThinking').classList.remove('active');
-        }
-        
-        // Initialize animation frame
-        window.addEventListener('load', () => {
-            if (partialSums && partialSums.length > 0) {
-                animationFrame = partialSums.length - 1;
-                drawCurrentView();
-            }
-        });
     </script>
 </body>
 </html>
