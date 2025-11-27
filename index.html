@@ -8,7 +8,7 @@
     <link rel="icon" href="/logo-mathswell-square-mirror.svg" type="image/svg+xml">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     
     <style>
         :root {
@@ -21,12 +21,14 @@
             --accent-amber: #f59e0b;
             --accent-red: #c62828;
             --success: #10b981;
+            --series-main: #0f766e;
+            --series-compare: #f59e0b;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--background);
             color: var(--text-primary);
             padding-top: 60px;
@@ -46,9 +48,9 @@
             font-weight: 600; letter-spacing: 1px;
         }
         
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
         
-        /* Tab Navigation */
+        /* Tabs */
         .tabs {
             display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;
             background: white; padding: 0.5rem; border-radius: 12px;
@@ -56,9 +58,9 @@
         }
         
         .tab-btn {
-            padding: 0.75rem 1.5rem; border: none; background: transparent;
+            padding: 0.6rem 1rem; border: none; background: transparent;
             color: var(--text-muted); cursor: pointer; border-radius: 8px;
-            font-weight: 500; transition: all 0.2s ease;
+            font-weight: 500; transition: all 0.2s ease; font-size: 0.9rem;
             display: flex; align-items: center; gap: 0.5rem;
         }
         
@@ -67,319 +69,288 @@
         
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }
-
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Hero Section */
+        /* Hero */
         .hero { text-align: center; margin-bottom: 2rem; }
-        .hero h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem; font-weight: 700; }
-        .hero p { font-size: 1.125rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; line-height: 1.6; }
+        .hero h1 { font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .hero p { font-size: 1rem; color: var(--text-muted); max-width: 650px; margin: 0 auto; line-height: 1.5; }
         
-        /* Concept Cards */
-        .concept-cards {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem; margin-bottom: 2rem;
-        }
-        .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-        .card-icon {
-            width: 50px; height: 50px; background: var(--interactive);
-            border-radius: 8px; display: flex; align-items: center;
-            justify-content: center; margin-bottom: 1rem; font-size: 1.8rem;
-        }
-        .card h3 { color: var(--primary); margin-bottom: 0.75rem; font-size: 1.25rem; }
-        .card p { color: var(--text-muted); line-height: 1.6; }
+        /* Explorer Layout */
+        .explorer-layout { display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem; }
         
-        /* Explorer Styles */
-        .explorer-container { display: grid; grid-template-columns: 320px 1fr; gap: 2rem; }
         .control-panel {
-            background: white; border-radius: 12px; padding: 1.5rem;
+            background: white; border-radius: 12px; padding: 1.25rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1); height: fit-content;
             position: sticky; top: 80px;
         }
-        .visualization-area {
-            background: white; border-radius: 12px; padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
         
-        .preset-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .preset-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
         .preset-pill {
-            padding: 0.4rem 1rem; border-radius: 999px; background: white;
+            padding: 0.35rem 0.7rem; border-radius: 999px; background: white;
             border: 2px solid var(--primary); color: var(--primary);
-            cursor: pointer; transition: all 0.2s ease; font-size: 0.875rem; font-weight: 500;
+            cursor: pointer; transition: all 0.2s ease; font-size: 0.75rem; font-weight: 500;
         }
-        .preset-pill:hover { background: var(--interactive); transform: translateY(-2px); }
+        .preset-pill:hover { background: var(--interactive); }
         .preset-pill.active { background: var(--primary); color: white; }
         
-        .control-group { margin-bottom: 1.25rem; }
-        .control-group label { display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-        .slider-container { display: flex; align-items: center; gap: 1rem; }
-        input[type="range"] { flex: 1; height: 6px; background: var(--interactive); border-radius: 3px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--primary); cursor: pointer; border-radius: 50%; }
-        .slider-value { min-width: 40px; text-align: right; font-family: 'Monaco', monospace; color: var(--primary); font-weight: 600; }
+        .control-group { margin-bottom: 1rem; }
+        .control-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .slider-container { display: flex; align-items: center; gap: 0.5rem; }
+        input[type="range"] { flex: 1; height: 5px; background: var(--interactive); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; background: var(--primary); border-radius: 50%; cursor: pointer; }
+        .slider-value { min-width: 35px; text-align: right; font-family: monospace; color: var(--primary); font-weight: 600; font-size: 0.8rem; }
         
         .info-display {
             background: var(--interactive); border: 1px solid var(--primary);
-            border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;
+            border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.8rem;
         }
-        .info-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .info-item { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
         .info-item:last-child { margin-bottom: 0; }
-        .info-value { font-family: 'Monaco', monospace; color: var(--primary); font-weight: 600; }
+        .info-value { font-family: monospace; color: var(--primary); font-weight: 600; }
+        
+        .btn {
+            padding: 0.45rem 0.7rem; border: 2px solid var(--primary);
+            background: white; color: var(--primary); border-radius: 6px;
+            cursor: pointer; font-weight: 500; transition: all 0.2s ease; font-size: 0.8rem;
+        }
+        .btn:hover { background: var(--primary); color: white; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-primary { background: var(--primary); color: white; }
         
         .button-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        .btn {
-            padding: 0.5rem 1rem; border: 2px solid var(--primary);
-            background: white; color: var(--primary); border-radius: 6px;
-            cursor: pointer; font-weight: 500; transition: all 0.2s ease; font-size: 0.875rem;
-        }
-        .btn:hover { background: var(--primary); color: white; transform: translateY(-1px); }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-light); border-color: var(--primary-light); }
         
-        /* View Selector */
-        .view-selector { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: center; }
-        .view-btn {
-            padding: 0.5rem 1rem; border: 2px solid var(--primary); background: white;
-            color: var(--primary); border-radius: 6px; cursor: pointer;
-            font-weight: 500; transition: all 0.2s ease; font-size: 0.875rem;
-        }
-        .view-btn.active { background: var(--primary); color: white; }
-        
-        .view-panel { display: none; min-height: 400px; }
-        .view-panel.active { display: block; }
-        
-        /* Numerical View */
-        .numerical-display {
-            background: #1a1a1a; border-radius: 8px; padding: 1.5rem;
-            font-family: 'Monaco', 'Courier New', monospace; color: #0f0;
-            display: flex; flex-direction: column; gap: 1.5rem;
-        }
-        .sum-display { font-size: 2rem; letter-spacing: 2px; text-align: center; margin-bottom: 0.5rem; }
-        .digit-indicator { display: inline-block; padding: 0 2px; transition: all 0.3s ease; }
-        .digit-indicator.changing { color: #ff0; background: rgba(255, 255, 0, 0.1); }
-        .digit-indicator.stable { color: #0f0; }
-        
-        /* Comparison Lab Styles */
-        .divergence-test-section {
-            background: white; border-radius: 12px; padding: 2rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1); margin-bottom: 2rem;
-        }
-        
-        .divergence-test-section h2 {
-            color: var(--primary); margin-bottom: 1rem; text-align: center; font-size: 1.8rem;
-        }
-        
-        .test-rule {
-            background: var(--interactive); padding: 1.5rem; border-radius: 8px;
-            margin-bottom: 1.5rem; text-align: center;
-        }
-        
-        .divergence-graphs {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;
-        }
-        
-        .graph-box {
-            text-align: center;
-        }
-        
-        .graph-box h4 {
-            color: var(--primary); margin-bottom: 0.5rem;
-        }
-        
-        .graph-box canvas {
-            border: 1px solid var(--primary); border-radius: 8px;
-        }
-        
-        .comparison-header {
-            text-align: center; margin-bottom: 2rem; padding: 2rem;
-            background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-        
-        .comparison-header h2 {
-            color: var(--primary); margin-bottom: 0.5rem;
-        }
-        
-        .comparison-scenarios {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem; margin-bottom: 2rem;
-        }
-        
-        .scenario-card {
-            background: white; border-radius: 12px; padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1); cursor: pointer;
-            transition: all 0.3s ease; border: 3px solid transparent;
-            text-align: center;
-        }
-        
-        .scenario-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-        .scenario-card.active { border-color: var(--primary); background: var(--interactive); }
-        .scenario-card.valid { border-color: var(--success); }
-        .scenario-card.invalid { border-color: #ccc; }
-        
-        .scenario-icon { 
-            font-size: 3rem; 
-            margin-bottom: 1rem;
-            filter: grayscale(0%);
-        }
-        .scenario-title { 
-            color: var(--primary); 
-            font-weight: 600; 
-            margin-bottom: 0.5rem;
-            font-size: 1.125rem;
-        }
-        .scenario-desc { 
-            font-size: 0.875rem; 
-            color: var(--text-muted); 
-            line-height: 1.4;
-        }
-        
-        .lab-visualization {
-            background: white; border-radius: 12px; padding: 2rem;
+        /* Visualization */
+        .unified-viz {
+            background: white; border-radius: 12px; padding: 1.25rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
         
+        .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        
+        .viz-box {
+            background: var(--background); border-radius: 8px; padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+        }
+        .viz-box.full-width { grid-column: 1 / -1; }
+        
+        .viz-title { font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
+        
+        .numerical-display {
+            background: #1a1a1a; border-radius: 6px; padding: 0.75rem;
+            font-family: monospace; text-align: center;
+        }
+        .sum-display { font-size: 1.3rem; letter-spacing: 1px; color: #0f0; }
+        .digit-stable { color: #0f0; }
+        .digit-changing { color: #ff0; background: rgba(255,255,0,0.1); }
+        .term-info { font-size: 0.7rem; color: #888; margin-top: 0.3rem; }
+        
+        .step-controls {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e0e0e0;
+        }
+        
+        .step-btn {
+            width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--primary);
+            background: white; color: var(--primary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+        }
+        .step-btn:hover:not(:disabled) { background: var(--primary); color: white; }
+        .step-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        
+        .step-counter { font-family: monospace; color: var(--primary); font-weight: 600; min-width: 90px; text-align: center; font-size: 0.85rem; }
+        
+        /* ============ TAB 2 ============ */
+        .section-box {
+            background: white; border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1); margin-bottom: 1.5rem;
+        }
+        
+        .section-box h2 { color: var(--primary); margin-bottom: 1rem; text-align: center; font-size: 1.4rem; }
+        
+        .test-rule {
+            background: var(--interactive); padding: 1rem; border-radius: 8px;
+            margin-bottom: 1rem; text-align: center;
+        }
+        
+        .divergence-graphs {
+            display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+        }
+        
+        .graph-box { text-align: center; }
+        .graph-title { color: var(--primary); margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; }
+        .graph-box canvas { border: 1px solid var(--primary); border-radius: 8px; }
+        
+        .animate-btn-container { text-align: center; margin-top: 1rem; }
+        
+        .comparison-scenarios {
+            display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        
+        .scenario-card {
+            background: white; border-radius: 10px; padding: 1rem;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1); cursor: pointer;
+            transition: all 0.2s ease; border: 2px solid transparent;
+            text-align: center; width: 200px;
+        }
+        .scenario-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .scenario-card.active { border-color: var(--primary); background: var(--interactive); }
+        
+        .scenario-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+        .scenario-title { color: var(--primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .scenario-desc { font-size: 0.75rem; color: var(--text-muted); }
+        
         .lab-result {
-            margin-top: 1.5rem; padding: 1.5rem; border-radius: 8px;
-            font-size: 1.125rem; line-height: 1.8;
+            margin-top: 1rem; padding: 1rem; border-radius: 8px;
+            font-size: 0.95rem; line-height: 1.5;
         }
-        .lab-result.valid { background: #d1fae5; border-left: 4px solid var(--success); color: #065f46; }
-        .lab-result.invalid { background: #fee2e2; border-left: 4px solid var(--accent-red); color: #7f1d1d; }
+        .lab-result.valid { background: #d1fae5; border-left: 4px solid var(--success); }
+        .lab-result.invalid { background: #fef3c7; border-left: 4px solid var(--accent-amber); }
         
-        /* Challenge Flowchart Styles */
-        .ai-disclosure-banner {
-            background: var(--interactive); border: 2px solid var(--primary);
-            border-radius: 12px; padding: 1rem; margin-bottom: 2rem;
+        .example-toggle { margin-top: 0.75rem; }
+        .example-content {
+            margin-top: 0.75rem; padding: 0.75rem; background: white;
+            border-radius: 6px; border: 1px solid #ddd; display: none;
         }
+        .example-content.show { display: block; }
+        .example-item { margin-bottom: 0.5rem; padding: 0.5rem; background: var(--background); border-radius: 4px; font-size: 0.85rem; }
         
-        .problem-display {
-            background: white; border-radius: 12px; padding: 2rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1); margin-bottom: 2rem;
-            text-align: center;
-        }
+        /* ============ TAB 3 ============ */
+        .challenge-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
         
-        .flowchart-container {
-            background: white; border-radius: 12px; padding: 2rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1); margin-bottom: 2rem;
-            min-height: 500px; position: relative;
+        .challenge-viz {
+            background: white; border-radius: 12px; padding: 1.25rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
         
-        .flow-step {
-            background: white; border: 2px solid var(--primary);
-            border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;
-            transition: all 0.3s ease; position: relative;
+        .challenge-controls {
+            background: white; border-radius: 12px; padding: 1.25rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1); height: fit-content;
         }
         
-        .flow-step.correct {
-            background: #d1fae5; border-color: var(--success);
+        .series-display {
+            background: var(--interactive); border-radius: 8px; padding: 1rem;
+            text-align: center; margin-bottom: 1rem;
         }
+        .series-display h4 { color: var(--primary); margin-bottom: 0.5rem; font-size: 0.85rem; }
+        .series-formula { font-size: 1.2rem; min-height: 2rem; }
         
-        .flow-step.hidden {
-            opacity: 0; height: 0; margin: 0; padding: 0;
-            overflow: hidden; transition: all 0.3s ease;
+        .known-info {
+            background: #dbeafe; border: 2px solid #3b82f6;
+            border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem;
+            text-align: center; font-size: 0.85rem;
         }
+        .known-info.converges { background: #d1fae5; border-color: var(--success); }
+        .known-info.diverges { background: #fee2e2; border-color: var(--accent-red); }
         
-        .flow-question {
-            font-size: 1.25rem; color: var(--primary); margin-bottom: 1.5rem;
-            text-align: center; font-weight: 600;
+        .step-section {
+            border: 2px solid #e0e0e0; border-radius: 8px; padding: 0.75rem;
+            margin-bottom: 0.75rem;
         }
+        .step-section.active { border-color: var(--primary); background: var(--interactive); }
+        .step-section.completed { border-color: var(--success); background: #d1fae5; }
         
-        .flow-options {
-            display: flex; gap: 1rem; justify-content: center; margin-bottom: 1rem;
+        .step-header { font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; font-size: 0.85rem; }
+        
+        .choice-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .choice-btn {
+            padding: 0.4rem 0.8rem; border: 2px solid #ddd; border-radius: 6px;
+            background: white; cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease;
         }
+        .choice-btn:hover { border-color: var(--primary); background: var(--interactive); }
+        .choice-btn.selected { border-color: var(--primary); background: var(--primary); color: white; }
+        .choice-btn.correct { border-color: var(--success); background: #d1fae5; }
+        .choice-btn.wrong { border-color: var(--accent-red); background: #fee2e2; }
         
-        .flow-option {
-            padding: 0.75rem 1.5rem; border: 2px solid var(--primary);
-            background: white; color: var(--primary); border-radius: 6px;
-            cursor: pointer; transition: all 0.2s ease; font-weight: 500;
+        .comparison-options { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; }
+        .comp-option {
+            padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px;
+            background: white; cursor: pointer; font-size: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
+        .comp-option:hover { border-color: var(--primary); }
+        .comp-option.selected { border-color: var(--series-compare); background: #fffbeb; }
+        .behavior-tag { font-size: 0.65rem; padding: 0.1rem 0.3rem; border-radius: 3px; }
+        .behavior-tag.diverges { background: #fee2e2; color: #991b1b; }
+        .behavior-tag.converges { background: #d1fae5; color: #065f46; }
         
-        .flow-option:hover {
-            background: var(--interactive); transform: translateY(-2px);
-        }
-        
-        .flow-option.selected {
-            background: var(--primary); color: white;
-        }
-        
-        .error-box {
-            background: #fee2e2; border: 2px solid var(--accent-red);
-            border-radius: 8px; padding: 1rem; margin-top: 1rem;
-            display: none; animation: slideIn 0.3s ease;
-        }
-        
-        .error-box.show { display: block; }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .mathpal-comment {
+        .mathpal-box {
             background: var(--interactive); border-left: 4px solid var(--accent-amber);
-            padding: 1rem; margin-top: 1rem; border-radius: 4px;
-            font-style: italic; display: none; opacity: 0;
-            transition: opacity 0.5s ease;
+            padding: 0.75rem; margin-top: 0.75rem; border-radius: 0 6px 6px 0;
+        }
+        .mathpal-header { display: flex; align-items: center; gap: 0.4rem; font-weight: 600; color: var(--primary); font-size: 0.8rem; margin-bottom: 0.4rem; }
+        .mathpal-text { font-size: 0.85rem; line-height: 1.4; }
+        
+        .algebra-box {
+            background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px;
+            padding: 0.75rem; margin-top: 0.75rem; display: none;
+        }
+        .algebra-box.show { display: block; }
+        .algebra-box h5 { color: var(--primary); margin-bottom: 0.4rem; font-size: 0.8rem; }
+        .algebra-step { font-size: 0.85rem; margin-bottom: 0.3rem; }
+        
+        .graph-note { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem; font-style: italic; }
+        
+        .legend-box { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 0.5rem; font-size: 0.75rem; }
+        .legend-item { display: flex; align-items: center; gap: 0.3rem; }
+        .legend-color { width: 20px; height: 3px; border-radius: 2px; }
+        
+        /* ============ TAB 4: Test Yourself ============ */
+        .test-layout { display: grid; grid-template-columns: 1fr 360px; gap: 1.5rem; }
+        
+        .test-viz { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .test-controls { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        
+        .view-tabs { display: flex; gap: 0.3rem; margin-bottom: 0.75rem; }
+        .view-tab {
+            padding: 0.4rem 0.7rem; border: 2px solid #ddd; border-radius: 6px;
+            background: white; cursor: pointer; font-size: 0.75rem;
+        }
+        .view-tab.active { border-color: var(--primary); background: var(--primary); color: white; }
+        
+        .test-input-group { margin-bottom: 0.75rem; }
+        .test-input-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .test-input-group input, .test-input-group select {
+            width: 100%; padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px;
+            font-size: 0.85rem;
+        }
+        .test-input-group input:focus, .test-input-group select:focus { border-color: var(--primary); outline: none; }
+        
+        .reasoning-box {
+            background: var(--background); border-radius: 6px; padding: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        .reasoning-box label { display: block; font-size: 0.8rem; margin-bottom: 0.3rem; }
+        .reasoning-box select { width: 100%; padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; }
+        
+        .solution-box {
+            background: white; border: 3px solid var(--success);
+            border-radius: 12px; padding: 1.25rem; margin-top: 1rem;
+            display: none;
+        }
+        .solution-box.show { display: block; }
+        .solution-box h4 { color: var(--primary); margin-bottom: 0.75rem; text-align: center; }
+        .solution-step { margin-bottom: 0.5rem; padding: 0.5rem; background: var(--background); border-radius: 4px; font-size: 0.9rem; }
+        .print-btn { margin-top: 0.75rem; width: 100%; }
+        
+        @media print {
+            .solution-box { border: 2px solid #000; }
+            .no-print { display: none !important; }
         }
         
-        .mathpal-comment.show { 
-            display: block; 
-            animation: fadeInComment 0.5s ease forwards;
-        }
-        
-        @keyframes fadeInComment {
-            to { opacity: 1; }
-        }
-        
-        .hint-button {
-            text-align: center; margin-top: 0.5rem;
-        }
-        
-        .hint-btn {
-            padding: 0.5rem 1rem; background: var(--accent-amber); color: white;
-            border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem;
-            transition: all 0.2s ease;
-        }
-        
-        .hint-btn:hover { background: #e59e0b; }
-        
-        .final-solution {
-            background: white; border: 3px solid var(--primary);
-            border-radius: 12px; padding: 2rem; margin-top: 2rem;
-            display: none; opacity: 0; transform: scale(0.95);
-            transition: all 0.5s ease;
-        }
-        
-        .final-solution.show {
-            display: block; opacity: 1; transform: scale(1);
-        }
-        
-        .solution-line {
-            padding: 0.75rem 0; font-size: 1.125rem; line-height: 1.8;
-            opacity: 0; animation: fadeInLine 0.3s ease forwards;
-        }
-        
-        @keyframes fadeInLine {
-            to { opacity: 1; }
-        }
-        
-        .nav-btn {
-            padding: 0.75rem 1.5rem; background: var(--primary); color: white;
-            border: none; border-radius: 6px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .nav-btn:hover { background: var(--primary-light); }
-        
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .explorer-container { grid-template-columns: 1fr; }
+        /* Mobile */
+        @media (max-width: 900px) {
+            .explorer-layout, .challenge-layout, .test-layout { grid-template-columns: 1fr; }
             .control-panel { position: relative; top: 0; }
-            .comparison-scenarios { grid-template-columns: 1fr; }
-            .divergence-graphs { grid-template-columns: 1fr; }
-            .flow-options { flex-direction: column; }
-            .tabs { padding: 0.5rem; }
-            .tab-btn { padding: 0.5rem 1rem; font-size: 0.875rem; }
-            input, button, select { font-size: 16px; min-height: 44px; }
+            .viz-grid { grid-template-columns: 1fr; }
+            .comparison-scenarios { flex-direction: column; align-items: center; }
+        }
+        
+        @media (max-width: 600px) {
+            .tabs { flex-direction: column; align-items: stretch; }
+            .tab-btn { justify-content: center; }
+            input, button, select { font-size: 16px; }
         }
     </style>
 </head>
@@ -392,387 +363,325 @@
     </div>
     
     <div class="container">
-        <div class="tabs">
+        <div class="tabs no-print">
             <button class="tab-btn active" data-tab="explorer">🔬 Explorer</button>
-            <button class="tab-btn" data-tab="lab">⚖️ Comparison Test Lab</button>
-            <button class="tab-btn" data-tab="challenge">
-                🤝 Challenge with MathPal
-                <svg width="20" height="20" viewBox="0 0 100 100" style="vertical-align: middle;">
-                    <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
-                    <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
-                    <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
-                    <line x1="50" y1="35" x2="50" y2="25" stroke="#0f766e" stroke-width="2"/>
-                    <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
-                    <circle cx="40" cy="47" r="5" fill="white"/>
-                    <circle cx="60" cy="47" r="5" fill="white"/>
-                    <circle cx="40" cy="47" r="3" fill="#0f766e"/>
-                    <circle cx="60" cy="47" r="3" fill="#0f766e"/>
-                    <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
-                </svg>
-            </button>
+            <button class="tab-btn" data-tab="lab">⚖️ Comparison Lab</button>
+            <button class="tab-btn" data-tab="learn">📚 Learn Comparison</button>
+            <button class="tab-btn" data-tab="test">✏️ Test Yourself</button>
         </div>
         
-        <!-- Explorer Tab -->
+        <!-- ============ TAB 1: Explorer ============ -->
         <div id="explorer" class="tab-content active">
             <div class="hero">
                 <h1>Series Explorer: Three Views of Infinity</h1>
-                <p>When we add infinitely many numbers, does the sum "settle down" to a value? Explore convergence through three complementary views.</p>
+                <p>Watch how partial sums behave as you add more terms. Does the sum settle down or grow forever?</p>
             </div>
             
-            <div class="concept-cards">
-                <div class="card">
-                    <div class="card-icon">🔢</div>
-                    <h3>Numerical View</h3>
-                    <p>Watch the digits of partial sums stabilize (or not!) as more terms are added. Green digits have settled, yellow ones are still changing.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">➡️</div>
-                    <h3>Number Line View</h3>
-                    <p>See partial sums hop along a line. Do they approach a target, or keep moving forever?</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">📊</div>
-                    <h3>Staircase View</h3>
-                    <p>Each term adds a step to our staircase. Does it level off at a certain height, or climb endlessly?</p>
-                </div>
-            </div>
-            
-            <div class="explorer-container">
+            <div class="explorer-layout">
                 <div class="control-panel">
-                    <h3 style="margin-bottom: 1rem;">Choose a Series Type</h3>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 0.9rem;">Choose a Series</h3>
                     <div class="preset-pills">
-                        <button class="preset-pill active" onclick="loadSeries(event, 'geometric')">Geometric</button>
-                        <button class="preset-pill" onclick="loadSeries(event, 'harmonic')">Harmonic</button>
-                        <button class="preset-pill" onclick="loadSeries(event, 'p-series')">p-Series</button>
-                        <button class="preset-pill" onclick="loadSeries(event, 'alternating')">Alternating</button>
-                        <button class="preset-pill" onclick="loadSeries(event, 'telescoping')">Telescoping</button>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label>Number of Terms</label>
-                        <div class="slider-container">
-                            <input type="range" id="termsSlider" min="5" max="100" value="20">
-                            <span class="slider-value" id="termsValue">20</span>
-                        </div>
+                        <button class="preset-pill active" onclick="loadSeries('geometric', this)">Geometric</button>
+                        <button class="preset-pill" onclick="loadSeries('harmonic', this)">Harmonic</button>
+                        <button class="preset-pill" onclick="loadSeries('p-series', this)">p-Series</button>
+                        <button class="preset-pill" onclick="loadSeries('alternating', this)">Alternating</button>
+                        <button class="preset-pill" onclick="loadSeries('telescoping', this)">Telescoping</button>
                     </div>
                     
                     <div class="control-group" id="parameterControl">
-                        <label>Parameter</label>
+                        <label id="paramLabel">Common Ratio (r)</label>
                         <div class="slider-container">
-                            <input type="range" id="paramSlider" min="0.1" max="2" step="0.1" value="0.5">
+                            <input type="range" id="paramSlider" min="0.1" max="1.5" step="0.1" value="0.5">
                             <span class="slider-value" id="paramValue">0.5</span>
                         </div>
                     </div>
                     
                     <div class="info-display">
                         <div class="info-item">
-                            <span>Current Sum:</span>
+                            <span>Partial Sum:</span>
                             <span class="info-value" id="partialSum">0.000</span>
                         </div>
                         <div class="info-item">
-                            <span>Status:</span>
-                            <span class="info-value" id="convergenceStatus">Converges</span>
+                            <span>Behavior:</span>
+                            <span class="info-value" id="convergenceStatus">Settles</span>
                         </div>
                         <div class="info-item">
                             <span>Formula:</span>
-                            <span class="info-value" id="formulaDisplay">Σ xⁿ</span>
+                            <span class="info-value" id="formulaDisplay">Σ rⁿ</span>
                         </div>
                     </div>
                     
                     <div class="button-group">
-                        <button class="btn btn-primary" onclick="animateSeries(event)">▶ Animate</button>
-                        <button class="btn" onclick="resetSeries()">↺ Reset</button>
+                        <button class="btn btn-primary" id="animateBtn" onclick="toggleAnimation()">▶ Play</button>
+                        <button class="btn" onclick="resetToFull()">↺ Reset</button>
                     </div>
                 </div>
                 
-                <div class="visualization-area">
-                    <div class="view-selector">
-                        <button class="view-btn active" onclick="switchView(event, 'numerical')">🔢 Numerical</button>
-                        <button class="view-btn" onclick="switchView(event, 'numberline')">➡️ Number Line</button>
-                        <button class="view-btn" onclick="switchView(event, 'staircase')">📊 Staircase</button>
-                    </div>
-                    
-                    <div id="numerical-view" class="view-panel active">
-                        <div class="numerical-display">
-                            <div class="sum-display" id="sumDisplay">0.00000000</div>
-                            <canvas id="num-canvas" width="800" height="250"></canvas>
+                <div class="unified-viz">
+                    <div class="viz-grid">
+                        <div class="viz-box">
+                            <div class="viz-title">🔢 Numerical View</div>
+                            <div class="numerical-display">
+                                <div class="sum-display" id="sumDisplay">0.00000000</div>
+                                <div class="term-info" id="termInfo">Term 0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="viz-box">
+                            <div class="viz-title">📊 Staircase View</div>
+                            <canvas id="staircase-canvas" height="160"></canvas>
+                        </div>
+                        
+                        <div class="viz-box full-width">
+                            <div class="viz-title">➡️ Number Line — Watch the Sum Accumulate</div>
+                            <canvas id="numberline-canvas" height="100"></canvas>
                         </div>
                     </div>
                     
-                    <div id="numberline-view" class="view-panel">
-                        <canvas id="numberline-canvas" width="800" height="400"></canvas>
-                    </div>
-                    
-                    <div id="staircase-view" class="view-panel">
-                        <canvas id="staircase-canvas" width="800" height="400"></canvas>
+                    <div class="step-controls">
+                        <button class="step-btn" id="stepBackBtn" onclick="stepBack()">−</button>
+                        <div class="step-counter"><span id="currentTermDisplay">0</span> / <span id="maxTermsDisplay">100</span></div>
+                        <button class="step-btn" id="stepForwardBtn" onclick="stepForward()">+</button>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Comparison Test Lab Tab -->
+        <!-- ============ TAB 2: Comparison Lab ============ -->
         <div id="lab" class="tab-content">
-            <div class="divergence-test-section">
-                <h2>🚦 First Check: The Divergence Test</h2>
+            <div class="section-box">
+                <h2>🚦 The Surprising Harmonic Series</h2>
                 <div class="test-rule">
-                    <div style="font-size: 1.25rem; margin-bottom: 0.5rem;" id="divergenceFormula">
-                        If lim(n→∞) aₙ ≠ 0, then Σaₙ diverges
-                    </div>
-                    <div style="color: var(--text-muted); font-size: 0.875rem;">
-                        ⚠️ But if the limit equals 0, we can't conclude anything!
-                    </div>
+                    <div style="font-size: 1rem; margin-bottom: 0.4rem;">Even when terms shrink to zero, the sum might still grow forever!</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">Watch: each term 1/n → 0, but Σ(1/n) → ∞</div>
                 </div>
                 
                 <div class="divergence-graphs">
                     <div class="graph-box">
-                        <h4>Sequence Terms (aₙ = 1/n)</h4>
-                        <canvas id="terms-canvas" width="400" height="250"></canvas>
-                        <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">
-                            Each term represents how much we're adding
-                        </p>
+                        <div class="graph-title">Terms: aₙ = 1/n</div>
+                        <canvas id="terms-canvas" width="320" height="200"></canvas>
                     </div>
                     <div class="graph-box">
-                        <h4>Partial Sums (Σ 1/n)</h4>
-                        <canvas id="sums-canvas" width="400" height="250"></canvas>
-                        <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">
-                            Notice: Terms → 0, but sum keeps growing!
-                        </p>
+                        <div class="graph-title">Partial Sums: Sₙ</div>
+                        <canvas id="sums-canvas" width="320" height="200"></canvas>
                     </div>
                 </div>
-            </div>
-            
-            <div class="comparison-header">
-                <h2 style="font-size: 1.8rem;">The Comparison Test: Your Safety Net</h2>
-                <p>If you know one series converges or diverges, you can use it to prove what happens to another series. But there's a catch – the comparison only works one way!</p>
-            </div>
-            
-            <div class="comparison-scenarios">
-                <div class="scenario-card valid" onclick="loadLabScenario('ceiling')">
-                    <div class="scenario-icon">📉</div>
-                    <div class="scenario-title">The Ceiling Trap</div>
-                    <div class="scenario-desc">When you're smaller than something that converges, you're trapped below a ceiling. You must converge!</div>
-                </div>
                 
-                <div class="scenario-card valid" onclick="loadLabScenario('floor')">
-                    <div class="scenario-icon">📈</div>
-                    <div class="scenario-title">The Rising Floor</div>
-                    <div class="scenario-desc">When you're bigger than something that diverges, you're pushed up by a rising floor. You must diverge!</div>
-                </div>
-                
-                <div class="scenario-card invalid" onclick="loadLabScenario('bigger-converge')">
-                    <div class="scenario-icon">🤷</div>
-                    <div class="scenario-title">Bigger but Converges?</div>
-                    <div class="scenario-desc">Being bigger than something small doesn't mean you're big. You might still converge!</div>
-                </div>
-                
-                <div class="scenario-card invalid" onclick="loadLabScenario('smaller-diverge')">
-                    <div class="scenario-icon">😕</div>
-                    <div class="scenario-title">Smaller but Diverges?</div>
-                    <div class="scenario-desc">Being smaller than infinity tells you nothing. You could still diverge slowly!</div>
+                <div class="animate-btn-container">
+                    <button class="btn btn-primary" id="divergenceAnimateBtn" onclick="animateDivergenceGraphs()">▶ Animate</button>
                 </div>
             </div>
             
-            <div class="lab-visualization">
-                <canvas id="lab-canvas" width="800" height="350"></canvas>
-                <div id="lab-result" class="lab-result"></div>
+            <div class="section-box">
+                <h2>The Comparison Principle</h2>
+                <p style="text-align: center; margin-bottom: 1rem; color: var(--text-muted);">Comparison works in specific directions. Click each case to understand.</p>
+                
+                <div class="comparison-scenarios">
+                    <div class="scenario-card" onclick="loadLabScenario('ceiling', this)">
+                        <div class="scenario-icon">📉</div>
+                        <div class="scenario-title">Smaller than Convergent</div>
+                        <div class="scenario-desc">Must converge!</div>
+                    </div>
+                    <div class="scenario-card" onclick="loadLabScenario('floor', this)">
+                        <div class="scenario-icon">📈</div>
+                        <div class="scenario-title">Bigger than Divergent</div>
+                        <div class="scenario-desc">Must diverge!</div>
+                    </div>
+                    <div class="scenario-card" onclick="loadLabScenario('bigger-converge', this)">
+                        <div class="scenario-icon">🤷</div>
+                        <div class="scenario-title">Bigger than Convergent</div>
+                        <div class="scenario-desc">Could go either way!</div>
+                    </div>
+                    <div class="scenario-card" onclick="loadLabScenario('smaller-diverge', this)">
+                        <div class="scenario-icon">😕</div>
+                        <div class="scenario-title">Smaller than Divergent</div>
+                        <div class="scenario-desc">Could go either way!</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center;">
+                    <canvas id="lab-canvas" width="600" height="260"></canvas>
+                </div>
+                <div id="lab-result" class="lab-result" style="display: none; max-width: 600px; margin: 0.75rem auto 0;"></div>
             </div>
         </div>
         
-        <!-- Challenge with MathPal Tab -->
-        <div id="challenge" class="tab-content">
-            <div class="ai-disclosure-banner">
-                <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center;">
-                    <svg width="32" height="32" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
-                        <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
-                        <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
-                        <line x1="50" y1="35" x2="50" y2="25" stroke="#0f766e" stroke-width="2"/>
-                        <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
-                        <circle cx="40" cy="47" r="5" fill="white"/>
-                        <circle cx="60" cy="47" r="5" fill="white"/>
-                        <circle cx="40" cy="47" r="3" fill="#0f766e"/>
-                        <circle cx="60" cy="47" r="3" fill="#0f766e"/>
-                        <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
-                    </svg>
-                    <div style="text-align: left;">
-                        <div style="font-weight: 600; color: var(--primary);">
-                            MathPal - Your AI Study Buddy
+        <!-- ============ TAB 3: Learn Comparison ============ -->
+        <div id="learn" class="tab-content">
+            <div class="section-box" style="text-align: center; margin-bottom: 1rem;">
+                <h2 style="margin-bottom: 0.5rem;">📚 Learning Comparison Through Examples</h2>
+                <p style="color: var(--text-muted);">See how to choose and use comparison series. Some examples teach the method; others show why certain comparisons don't work.</p>
+            </div>
+            
+            <div class="challenge-layout">
+                <div class="challenge-viz">
+                    <div class="legend-box">
+                        <div class="legend-item"><div class="legend-color" style="background: var(--series-main);"></div><span>Our Series</span></div>
+                        <div class="legend-item"><div class="legend-color" style="background: var(--series-compare);"></div><span>Comparison</span></div>
+                    </div>
+                    <canvas id="learn-canvas" width="650" height="300"></canvas>
+                    <div class="graph-note" id="learnGraphNote"></div>
+                    
+                    <div class="algebra-box" id="learnAlgebraBox">
+                        <h5>📐 Why This Comparison Works (or Doesn't)</h5>
+                        <div id="learnAlgebraSteps"></div>
+                    </div>
+                </div>
+                
+                <div class="challenge-controls">
+                    <div class="series-display">
+                        <h4>📖 Example Series</h4>
+                        <div class="series-formula" id="learnSeriesFormula"></div>
+                    </div>
+                    
+                    <div class="known-info" id="learnKnownInfo"></div>
+                    
+                    <div class="step-section active" id="learnStep1">
+                        <div class="step-header">Step 1: Does aₙ → 0?</div>
+                        <div class="choice-buttons" id="learnLimitChoice"></div>
+                    </div>
+                    
+                    <div class="step-section" id="learnStep2" style="display: none;">
+                        <div class="step-header">Step 2: Choose a comparison series</div>
+                        <div class="comparison-options" id="learnCompOptions"></div>
+                    </div>
+                    
+                    <div class="mathpal-box">
+                        <div class="mathpal-header">
+                            <svg width="16" height="16" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#e6fffb"/><rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/><rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/><circle cx="40" cy="47" r="3" fill="#0f766e"/><circle cx="60" cy="47" r="3" fill="#0f766e"/></svg>
+                            MathPal
                         </div>
-                        <div style="font-size: 0.875rem; color: var(--text-muted);">
-                            Learns alongside you • Can make mistakes • May be occasionally unavailable
-                        </div>
+                        <div class="mathpal-text" id="learnMathpalText">Choose an example to begin!</div>
+                    </div>
+                    
+                    <div class="button-group" style="margin-top: 0.75rem;">
+                        <button class="btn btn-primary" onclick="newLearnExample()">🎲 New Example</button>
                     </div>
                 </div>
             </div>
-            
-            <div class="problem-display">
-                <h3 style="margin-bottom: 0.5rem;">Let's solve this together!</h3>
-                <div id="problemSeries" style="font-size: 1.5rem; margin-top: 1rem;"></div>
+        </div>
+        
+        <!-- ============ TAB 4: Test Yourself ============ -->
+        <div id="test" class="tab-content">
+            <div class="section-box no-print" style="text-align: center; margin-bottom: 1rem;">
+                <h2 style="margin-bottom: 0.5rem;">✏️ Test Yourself</h2>
+                <p style="color: var(--text-muted);">Determine if the series converges or diverges. Work through the steps, and MathPal will check your reasoning.</p>
             </div>
             
-            <div class="flowchart-container" id="flowchart">
-                <!-- Dynamic flowchart will be built here -->
-            </div>
-            
-            <div class="final-solution" id="finalSolution">
-                <h3 style="color: var(--primary); margin-bottom: 1.5rem; text-align: center;">
-                    📖 Complete Solution
-                </h3>
-                <div id="solutionContent">
-                    <!-- Solution lines will appear here with proper math rendering -->
+            <div class="test-layout">
+                <div class="test-viz">
+                    <div class="view-tabs no-print">
+                        <button class="view-tab active" onclick="switchTestView('numerical', this)">🔢 Numerical</button>
+                        <button class="view-tab" onclick="switchTestView('staircase', this)">📊 Staircase</button>
+                        <button class="view-tab" onclick="switchTestView('numberline', this)">➡️ Number Line</button>
+                    </div>
+                    <canvas id="test-canvas" width="650" height="280"></canvas>
+                    
+                    <div class="solution-box" id="solutionBox">
+                        <h4>✓ Complete Solution</h4>
+                        <div id="solutionSteps"></div>
+                        <button class="btn btn-primary print-btn no-print" onclick="window.print()">🖨️ Print Solution</button>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: center;">
-                <button class="nav-btn" onclick="newProblem()">🎲 New Problem</button>
-                <button class="nav-btn" onclick="showSolution()">👁️ Show Solution</button>
+                
+                <div class="test-controls no-print">
+                    <div class="series-display">
+                        <h4>🎯 Determine the Behavior</h4>
+                        <div class="series-formula" id="testSeriesFormula"></div>
+                    </div>
+                    
+                    <div class="step-section" id="testStep1">
+                        <div class="step-header">Step 1: What is lim(n→∞) aₙ?</div>
+                        <div class="test-input-group">
+                            <input type="text" id="limitInput" placeholder="Enter the limit (e.g., 0, 1, ∞)">
+                        </div>
+                        <button class="btn" onclick="checkLimit()">Check</button>
+                        <div id="limitFeedback" style="margin-top: 0.5rem; font-size: 0.85rem;"></div>
+                    </div>
+                    
+                    <div class="step-section" id="testStep2" style="display: none;">
+                        <div class="step-header">Step 2: Comparison Test</div>
+                        <div class="test-input-group">
+                            <label>I will compare with:</label>
+                            <select id="testCompSelect">
+                                <option value="">-- Select a series --</option>
+                                <option value="1/n">1/n (harmonic, diverges)</option>
+                                <option value="1/n^2">1/n² (converges)</option>
+                                <option value="1/sqrt(n)">1/√n (diverges)</option>
+                                <option value="1/n^3">1/n³ (converges)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="reasoning-box">
+                            <label>Because:</label>
+                            <select id="testReasonSelect">
+                                <option value="">-- Select your reasoning --</option>
+                                <option value="smaller-conv">My series is SMALLER and comparison CONVERGES → mine converges</option>
+                                <option value="bigger-div">My series is BIGGER and comparison DIVERGES → mine diverges</option>
+                                <option value="bigger-conv">My series is BIGGER and comparison CONVERGES</option>
+                                <option value="smaller-div">My series is SMALLER and comparison DIVERGES</option>
+                            </select>
+                        </div>
+                        <button class="btn" onclick="checkComparison()" style="margin-top: 0.5rem;">Check My Work</button>
+                    </div>
+                    
+                    <div class="mathpal-box">
+                        <div class="mathpal-header">
+                            <svg width="16" height="16" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#e6fffb"/><rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/><rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/><circle cx="40" cy="47" r="3" fill="#0f766e"/><circle cx="60" cy="47" r="3" fill="#0f766e"/></svg>
+                            MathPal
+                        </div>
+                        <div class="mathpal-text" id="testMathpalText">Start by finding the limit of aₙ as n → ∞</div>
+                    </div>
+                    
+                    <div class="button-group" style="margin-top: 0.75rem;">
+                        <button class="btn btn-primary" onclick="newTestProblem()">🎲 New Problem</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
     <script>
-        // Global Variables
+        // =========================================
+        // RENDER MATH HELPER
+        // =========================================
+        function renderMath(element, latex, displayMode = false) {
+            try {
+                katex.render(latex, element, { displayMode: displayMode, throwOnError: false });
+            } catch(e) {
+                element.textContent = latex;
+            }
+        }
+        
+        // =========================================
+        // GLOBAL STATE
+        // =========================================
         let currentSeries = 'geometric';
-        let currentView = 'numerical';
         let seriesTerms = [];
         let partialSums = [];
+        let currentTermIndex = 0;
+        const maxTerms = 100;
         let animationId = null;
-        let animationFrame = 0;
+        let isAnimating = false;
         
-        // Challenge Variables
-        let currentProblem = null;
-        let currentStep = 0;
-        let correctPath = [];
-        let mathpalShown = false;
+        let divergenceAnimationId = null;
+        let divergenceFrame = 0;
         
-        // Series Problems for Challenge
-        const challengeProblems = [
-            {
-                latex: "\\sum_{n=1}^{\\infty} \\frac{1}{n^2}",
-                termsDisplay: "\\frac{1}{n^2}",
-                limitZero: true,
-                converges: true,
-                comparisonSeries: "1/n",
-                comparisonConverges: false,
-                validComparison: true,
-                flowchart: [
-                    {
-                        question: "\\text{Does } \\lim_{n \\to \\infty} \\frac{1}{n^2} = 0?",
-                        questionText: "Does lim(n→∞) 1/n² = 0?",
-                        options: ["Yes", "No"],
-                        correct: 0,
-                        errorMessage: "Check again: As n gets large, 1/n² gets very small!",
-                        mathpal: "I'm checking... yeah, 1/n² definitely shrinks to 0!"
-                    },
-                    {
-                        question: "\\text{Which series should we compare with?}",
-                        questionText: "Which series should we compare with?",
-                        options: ["Σ 1/n (harmonic)", "Σ 1/n³"],
-                        correct: 1,
-                        errorMessage: "1/n diverges and is bigger - that won't help us prove convergence!",
-                        mathpal: "I'm thinking 1/n³ converges and is bigger than our series..."
-                    },
-                    {
-                        question: "\\text{Since } \\frac{1}{n^2} < \\frac{1}{n^3} \\text{ actually... wait!}",
-                        questionText: "Actually, 1/n² > 1/n³. Let's compare with Σ 1/n^(1.5) instead.",
-                        options: ["1/n² < 1/n^1.5, and Σ1/n^1.5 converges", "Can't conclude"],
-                        correct: 0,
-                        errorMessage: "We CAN conclude! Smaller than convergent = converges.",
-                        mathpal: "Being smaller than something convergent means we're trapped!"
-                    }
-                ],
-                solution: [
-                    "Given series: \\sum \\frac{1}{n^2}",
-                    "Step 1: Check divergence test",
-                    "\\lim_{n \\to \\infty} \\frac{1}{n^2} = 0 \\checkmark \\text{ (inconclusive)}",
-                    "Step 2: Use comparison test",
-                    "Note that \\frac{1}{n^2} < \\frac{1}{n^{1.5}} \\text{ for all } n \\geq 1",
-                    "Since \\sum \\frac{1}{n^{1.5}} \\text{ converges (p-series, p > 1)}",
-                    "And our series is smaller",
-                    "Therefore: \\sum \\frac{1}{n^2} \\text{ converges}"
-                ]
-            },
-            {
-                latex: "\\sum_{n=1}^{\\infty} \\frac{n}{n+1}",
-                termsDisplay: "\\frac{n}{n+1}",
-                limitZero: false,
-                converges: false,
-                flowchart: [
-                    {
-                        question: "\\text{Does } \\lim_{n \\to \\infty} \\frac{n}{n+1} = 0?",
-                        questionText: "Does lim(n→∞) n/(n+1) = 0?",
-                        options: ["Yes", "No"],
-                        correct: 1,
-                        errorMessage: "Check: n/(n+1) = 1/(1+1/n) → 1, not 0!",
-                        mathpal: "Wait, n/(n+1) approaches 1, not 0!"
-                    }
-                ],
-                solution: [
-                    "Given series: \\sum \\frac{n}{n+1}",
-                    "Step 1: Apply divergence test",
-                    "\\lim_{n \\to \\infty} \\frac{n}{n+1}",
-                    "= \\lim_{n \\to \\infty} \\frac{1}{1 + \\frac{1}{n}}",
-                    "= 1 \\neq 0",
-                    "By the divergence test:",
-                    "The series DIVERGES"
-                ]
-            },
-            {
-                latex: "\\sum_{n=1}^{\\infty} \\frac{1}{\\sqrt{n}}",
-                termsDisplay: "\\frac{1}{\\sqrt{n}}",
-                limitZero: true,
-                converges: false,
-                comparisonSeries: "1/n",
-                comparisonConverges: false,
-                validComparison: true,
-                flowchart: [
-                    {
-                        question: "\\text{Does } \\lim_{n \\to \\infty} \\frac{1}{\\sqrt{n}} = 0?",
-                        questionText: "Does lim(n→∞) 1/√n = 0?",
-                        options: ["Yes", "No"],
-                        correct: 0,
-                        errorMessage: "Right! 1/√n does go to 0, but slowly.",
-                        mathpal: "Yeah, it goes to 0, but really slowly..."
-                    },
-                    {
-                        question: "\\text{Which series should we compare with?}",
-                        questionText: "Which series should we compare with?",
-                        options: ["Σ 1/n² (converges)", "Σ 1/n (diverges)"],
-                        correct: 1,
-                        errorMessage: "1/√n > 1/n², so comparing with 1/n² won't help!",
-                        mathpal: "Since 1/√n > 1/n, and 1/n diverges..."
-                    },
-                    {
-                        question: "\\text{Since } \\frac{1}{\\sqrt{n}} > \\frac{1}{n} \\text{ and } \\sum \\frac{1}{n} \\text{ diverges...}",
-                        questionText: "Since 1/√n > 1/n and Σ1/n diverges...",
-                        options: ["Our series diverges", "Can't conclude"],
-                        correct: 0,
-                        errorMessage: "We CAN conclude! Bigger than divergent = diverges.",
-                        mathpal: "Being bigger than something that diverges means we diverge too!"
-                    }
-                ],
-                solution: [
-                    "Given series: \\sum \\frac{1}{\\sqrt{n}} = \\sum \\frac{1}{n^{1/2}}",
-                    "Step 1: Check divergence test",
-                    "\\lim_{n \\to \\infty} \\frac{1}{\\sqrt{n}} = 0 \\checkmark \\text{ (inconclusive)}",
-                    "Step 2: Use comparison test",
-                    "Note that \\frac{1}{\\sqrt{n}} > \\frac{1}{n} \\text{ for all } n \\geq 1",
-                    "Since \\sum \\frac{1}{n} \\text{ diverges (harmonic series)}",
-                    "And our series has larger terms",
-                    "Therefore: \\sum \\frac{1}{\\sqrt{n}} \\text{ diverges}"
-                ]
-            }
-        ];
+        // Series configurations for number line
+        const seriesConfig = {
+            geometric: { minX: 0, maxX: 3, converges: true },
+            harmonic: { minX: 0, maxX: 6, converges: false },
+            'p-series': { minX: 0, maxX: 4, converges: true },
+            alternating: { minX: -1, maxX: 1, converges: true },
+            telescoping: { minX: 0, maxX: 1.5, converges: true }
+        };
         
-        // Initialize
+        // =========================================
+        // TAB 1: EXPLORER
+        // =========================================
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
-            });
-            
-            document.getElementById('termsSlider').addEventListener('input', (e) => {
-                document.getElementById('termsValue').textContent = e.target.value;
-                updateSeries();
             });
             
             document.getElementById('paramSlider').addEventListener('input', (e) => {
@@ -780,241 +689,135 @@
                 updateSeries();
             });
             
-            updateSeries();
-            drawDivergenceGraphs();
-            newProblem();
-            
-            // Render math in divergence test section
-            setTimeout(() => {
-                if (typeof katex !== 'undefined') {
-                    katex.render('\\text{If } \\lim_{n \\to \\infty} a_n \\neq 0, \\text{ then } \\sum a_n \\text{ diverges}', 
-                               document.getElementById('divergenceFormula'));
-                }
-            }, 100);
+            loadSeries('geometric');
+            drawDivergenceGraphs(0);
+            newLearnExample();
+            newTestProblem();
         });
         
-        // Tab Navigation
         function switchToTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             
-            if (tabId === 'explorer' && currentView === 'numerical') {
-                setTimeout(() => drawNumericalView(), 100);
-            }
+            setTimeout(() => {
+                if (tabId === 'explorer') drawAllViews();
+                if (tabId === 'learn') drawLearnGraph();
+                if (tabId === 'test') drawTestView();
+            }, 100);
         }
         
-        // Explorer Functions (keeping all the same as before)
-        function loadSeries(event, type) {
+        function loadSeries(type, btn) {
             currentSeries = type;
             document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
+            if (btn) btn.classList.add('active');
+            else document.querySelector(`.preset-pill:first-child`)?.classList.add('active');
             
             const paramControl = document.getElementById('parameterControl');
             const paramSlider = document.getElementById('paramSlider');
-            const label = paramControl.querySelector('label');
+            const paramLabel = document.getElementById('paramLabel');
             
-            switch(type) {
-                case 'geometric':
-                    paramControl.style.display = 'block';
-                    label.textContent = 'Common Ratio (r)';
-                    paramSlider.min = '0.1';
-                    paramSlider.max = '1.5';
-                    paramSlider.step = '0.1';
-                    paramSlider.value = '0.5';
-                    break;
-                case 'p-series':
-                    paramControl.style.display = 'block';
-                    label.textContent = 'Exponent (p)';
-                    paramSlider.min = '0.5';
-                    paramSlider.max = '2';
-                    paramSlider.step = '0.1';
-                    paramSlider.value = '1.5';
-                    break;
-                default:
-                    paramControl.style.display = 'none';
+            // Update number line config based on series type
+            if (type === 'geometric') {
+                paramControl.style.display = 'block';
+                paramLabel.textContent = 'Common Ratio (r)';
+                paramSlider.min = '0.1'; paramSlider.max = '1.5'; paramSlider.step = '0.1'; paramSlider.value = '0.5';
+                const r = parseFloat(paramSlider.value);
+                seriesConfig.geometric.maxX = r < 1 ? 1/(1-r) * 1.2 : 10;
+                seriesConfig.geometric.converges = r < 1;
+            } else if (type === 'p-series') {
+                paramControl.style.display = 'block';
+                paramLabel.textContent = 'Exponent (p)';
+                paramSlider.min = '0.5'; paramSlider.max = '3'; paramSlider.step = '0.1'; paramSlider.value = '2';
+            } else {
+                paramControl.style.display = 'none';
             }
             
             document.getElementById('paramValue').textContent = paramSlider.value;
+            stopAnimation();
             updateSeries();
         }
         
-        function generateSeriesTerms(type, n, param) {
-            const terms = [];
-            for (let i = 1; i <= n; i++) {
-                switch(type) {
-                    case 'geometric':
-                        terms.push(Math.pow(param, i-1));
-                        break;
-                    case 'harmonic':
-                        terms.push(1/i);
-                        break;
-                    case 'p-series':
-                        terms.push(1/Math.pow(i, param));
-                        break;
-                    case 'alternating':
-                        terms.push(Math.pow(-1, i+1)/i);
-                        break;
-                    case 'telescoping':
-                        terms.push(1/i - 1/(i+1));
-                        break;
-                }
-            }
-            return terms;
-        }
-        
-        function calculatePartialSums(terms) {
-            const sums = [];
-            let sum = 0;
-            for (let term of terms) {
-                sum += term;
-                sums.push(sum);
-            }
-            return sums;
-        }
-        
         function updateSeries() {
-            const n = parseInt(document.getElementById('termsSlider').value);
             const param = parseFloat(document.getElementById('paramSlider').value);
             
-            seriesTerms = generateSeriesTerms(currentSeries, n, param);
-            partialSums = calculatePartialSums(seriesTerms);
+            seriesTerms = [];
+            for (let i = 1; i <= maxTerms; i++) {
+                switch(currentSeries) {
+                    case 'geometric': seriesTerms.push(Math.pow(param, i-1)); break;
+                    case 'harmonic': seriesTerms.push(1/i); break;
+                    case 'p-series': seriesTerms.push(1/Math.pow(i, param)); break;
+                    case 'alternating': seriesTerms.push(Math.pow(-1, i+1)/i); break;
+                    case 'telescoping': seriesTerms.push(1/i - 1/(i+1)); break;
+                }
+            }
             
-            const lastSum = partialSums[partialSums.length - 1];
-            document.getElementById('partialSum').textContent = lastSum.toFixed(6);
+            partialSums = [];
+            let sum = 0;
+            for (let t of seriesTerms) { sum += t; partialSums.push(sum); }
             
-            let status = 'Analyzing...';
-            let formula = '';
+            // Update config for dynamic series
+            if (currentSeries === 'geometric') {
+                seriesConfig.geometric.maxX = param < 1 ? Math.min(1/(1-param) * 1.2, 10) : Math.max(...partialSums) * 1.1;
+                seriesConfig.geometric.converges = param < 1;
+            } else if (currentSeries === 'p-series') {
+                seriesConfig['p-series'].converges = param > 1;
+                seriesConfig['p-series'].maxX = param > 1 ? Math.max(...partialSums) * 1.2 : 6;
+            }
+            
+            let status = '', formula = '';
             switch(currentSeries) {
                 case 'geometric':
-                    status = param < 1 ? 'Converges' : 'Diverges';
-                    formula = `Σ (${param.toFixed(1)})ⁿ`;
+                    status = param < 1 ? 'Settles' : 'Grows';
+                    formula = `Σ (${param})ⁿ`;
                     break;
-                case 'harmonic':
-                    status = 'Diverges';
-                    formula = 'Σ 1/n';
-                    break;
+                case 'harmonic': status = 'Grows'; formula = 'Σ 1/n'; break;
                 case 'p-series':
-                    status = param > 1 ? 'Converges' : 'Diverges';
-                    formula = `Σ 1/n^${param.toFixed(1)}`;
+                    status = param > 1 ? 'Settles' : 'Grows';
+                    formula = `Σ 1/n^${param}`;
                     break;
-                case 'alternating':
-                    status = 'Converges';
-                    formula = 'Σ (-1)ⁿ⁺¹/n';
-                    break;
-                case 'telescoping':
-                    status = 'Converges to 1';
-                    formula = 'Σ (1/n - 1/(n+1))';
-                    break;
+                case 'alternating': status = 'Settles'; formula = 'Σ (-1)ⁿ⁺¹/n'; break;
+                case 'telescoping': status = 'Settles → 1'; formula = 'Σ (1/n − 1/(n+1))'; break;
             }
+            
             document.getElementById('convergenceStatus').textContent = status;
             document.getElementById('formulaDisplay').textContent = formula;
+            document.getElementById('maxTermsDisplay').textContent = maxTerms;
             
-            drawCurrentView();
+            currentTermIndex = maxTerms;
+            updateDisplays();
+            drawAllViews();
         }
         
-        function switchView(event, view) {
-            currentView = view;
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(`${view}-view`).classList.add('active');
+        function updateDisplays() {
+            const idx = Math.max(0, currentTermIndex - 1);
+            const sum = currentTermIndex > 0 ? partialSums[idx] : 0;
             
-            drawCurrentView();
-        }
-        
-        function drawCurrentView() {
-            switch(currentView) {
-                case 'numerical':
-                    drawNumericalView();
-                    break;
-                case 'numberline':
-                    drawNumberLine();
-                    break;
-                case 'staircase':
-                    drawStaircase();
-                    break;
-            }
-        }
-        
-        function drawNumericalView() {
+            document.getElementById('partialSum').textContent = sum.toFixed(6);
+            document.getElementById('currentTermDisplay').textContent = currentTermIndex;
+            
             const display = document.getElementById('sumDisplay');
-            const canvas = document.getElementById('num-canvas');
-            
-            if (!canvas || !canvas.offsetParent) return;
-            
-            const idx = Math.min(animationFrame || partialSums.length - 1, partialSums.length - 1);
-            const sum = partialSums[idx] || 0;
             const sumStr = sum.toFixed(8);
+            const prevSum = currentTermIndex > 1 ? partialSums[idx-1].toFixed(8) : '0.00000000';
             
-            display.innerHTML = '';
-            const prevSum = idx > 0 ? partialSums[idx-1].toFixed(8) : '0.00000000';
+            display.innerHTML = sumStr.split('').map((d, i) => {
+                if (d === '.') return '.';
+                const cls = (currentTermIndex <= 1 || (i < prevSum.length && d === prevSum[i])) ? 'digit-stable' : 'digit-changing';
+                return `<span class="${cls}">${d}</span>`;
+            }).join('');
             
-            sumStr.split('').forEach((digit, i) => {
-                const span = document.createElement('span');
-                span.className = 'digit-indicator';
-                if (digit === '.') {
-                    span.textContent = digit;
-                } else if (i < prevSum.length && digit === prevSum[i]) {
-                    span.classList.add('stable');
-                    span.textContent = digit;
-                } else {
-                    span.classList.add('changing');
-                    span.textContent = digit;
-                }
-                display.appendChild(span);
-            });
+            document.getElementById('termInfo').textContent = currentTermIndex > 0 
+                ? `Term ${currentTermIndex}: ${seriesTerms[idx] >= 0 ? '+' : ''}${seriesTerms[idx].toFixed(5)}`
+                : 'No terms';
             
-            // Draw graph WITHOUT shading
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 250;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#111';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            if (partialSums.length === 0) return;
-            
-            const padding = 40;
-            const width = canvas.width - 2*padding;
-            const height = canvas.height - 2*padding;
-            
-            const maxSum = Math.max(...partialSums);
-            const minSum = Math.min(0, ...partialSums);
-            const range = maxSum - minSum || 1;
-            
-            ctx.strokeStyle = '#444';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(padding, padding);
-            ctx.lineTo(padding, canvas.height - padding);
-            ctx.lineTo(canvas.width - padding, canvas.height - padding);
-            ctx.stroke();
-            
-            ctx.strokeStyle = '#0f0';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            
-            for (let i = 0; i <= idx; i++) {
-                const x = padding + (i / (partialSums.length - 1)) * width;
-                const y = canvas.height - padding - ((partialSums[i] - minSum) / range) * height;
-                
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-            ctx.stroke();
-            
-            if (idx >= 0) {
-                const x = padding + (idx / (partialSums.length - 1)) * width;
-                const y = canvas.height - padding - ((partialSums[idx] - minSum) / range) * height;
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            document.getElementById('stepBackBtn').disabled = currentTermIndex <= 0;
+            document.getElementById('stepForwardBtn').disabled = currentTermIndex >= maxTerms;
+        }
+        
+        function drawAllViews() {
+            drawNumberLine();
+            drawStaircase();
         }
         
         function drawNumberLine() {
@@ -1022,65 +825,97 @@
             if (!canvas || !canvas.offsetParent) return;
             
             canvas.width = canvas.offsetWidth;
-            canvas.height = 400;
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            const lineY = canvas.height / 2;
+            const config = seriesConfig[currentSeries];
             const padding = 40;
+            const lineY = canvas.height / 2 + 10;
+            const width = canvas.width - 2 * padding;
             
-            ctx.strokeStyle = '#ddd';
+            // Dynamic range based on series type
+            let minX = config.minX;
+            let maxX = config.maxX;
+            
+            // Adjust if current sums exceed config
+            if (currentTermIndex > 0) {
+                const displaySums = partialSums.slice(0, currentTermIndex);
+                const actualMin = Math.min(...displaySums, 0);
+                const actualMax = Math.max(...displaySums);
+                minX = Math.min(minX, actualMin * 1.1);
+                maxX = Math.max(maxX, actualMax * 1.1);
+            }
+            
+            const range = maxX - minX;
+            const getX = val => padding + ((val - minX) / range) * width;
+            
+            // Draw number line
+            ctx.strokeStyle = '#ccc';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(padding, lineY);
             ctx.lineTo(canvas.width - padding, lineY);
             ctx.stroke();
             
-            if (partialSums.length === 0) return;
-            
-            const min = Math.min(0, ...partialSums);
-            const max = Math.max(...partialSums);
-            const range = max - min || 1;
-            const scale = (canvas.width - 2*padding) / range;
-            
+            // Draw ticks
             ctx.fillStyle = '#666';
-            ctx.font = '12px monospace';
+            ctx.font = '10px monospace';
             ctx.textAlign = 'center';
             
-            for (let i = 0; i <= 5; i++) {
-                const value = min + (range * i / 5);
-                const x = padding + ((value - min) * scale);
-                
+            const tickCount = 6;
+            for (let i = 0; i <= tickCount; i++) {
+                const val = minX + (range * i / tickCount);
+                const x = getX(val);
+                ctx.strokeStyle = '#ddd';
                 ctx.beginPath();
-                ctx.moveTo(x, lineY - 5);
-                ctx.lineTo(x, lineY + 5);
+                ctx.moveTo(x, lineY - 4);
+                ctx.lineTo(x, lineY + 4);
                 ctx.stroke();
-                
-                ctx.fillText(value.toFixed(2), x, lineY + 20);
+                ctx.fillStyle = '#666';
+                ctx.fillText(val.toFixed(1), x, lineY + 16);
             }
             
-            const idx = animationFrame || partialSums.length - 1;
+            if (currentTermIndex === 0) return;
             
-            for (let i = 0; i <= idx; i++) {
-                const x = padding + ((partialSums[i] - min) * scale);
+            // Draw accumulation
+            const displaySums = partialSums.slice(0, currentTermIndex);
+            const displayTerms = seriesTerms.slice(0, currentTermIndex);
+            
+            let prevX = getX(0);
+            
+            for (let i = 0; i < currentTermIndex; i++) {
+                const sum = displaySums[i];
+                const term = displayTerms[i];
+                const x = getX(sum);
                 
-                if (i > 0) {
-                    const prevX = padding + ((partialSums[i-1] - min) * scale);
-                    ctx.strokeStyle = 'rgba(15, 118, 110, 0.3)';
-                    ctx.lineWidth = 1;
+                // Draw arc
+                if (Math.abs(x - prevX) > 2) {
+                    const midX = (prevX + x) / 2;
+                    const arcHeight = Math.min(20, Math.abs(x - prevX) * 0.25);
+                    const arcY = term >= 0 ? lineY - arcHeight : lineY + arcHeight;
+                    
+                    ctx.strokeStyle = i === currentTermIndex - 1 ? 'rgba(15,118,110,0.7)' : 'rgba(15,118,110,0.15)';
+                    ctx.lineWidth = i === currentTermIndex - 1 ? 2 : 1;
                     ctx.beginPath();
                     ctx.moveTo(prevX, lineY);
-                    
-                    const midX = (prevX + x) / 2;
-                    const arcHeight = 30;
-                    ctx.quadraticCurveTo(midX, lineY - arcHeight, x, lineY);
+                    ctx.quadraticCurveTo(midX, arcY, x, lineY);
                     ctx.stroke();
                 }
                 
-                ctx.fillStyle = i === idx ? '#0f766e' : '#10b98133';
+                // Draw point
+                ctx.fillStyle = i === currentTermIndex - 1 ? '#0f766e' : 'rgba(16,185,129,0.3)';
                 ctx.beginPath();
-                ctx.arc(x, lineY, i === idx ? 6 : 4, 0, Math.PI * 2);
+                ctx.arc(x, lineY, i === currentTermIndex - 1 ? 5 : 2, 0, Math.PI * 2);
                 ctx.fill();
+                
+                prevX = x;
+            }
+            
+            // Label final
+            if (currentTermIndex > 0) {
+                ctx.fillStyle = '#0f766e';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.fillText(`S${currentTermIndex}`, getX(displaySums[currentTermIndex-1]), lineY - 12);
             }
         }
         
@@ -1089,507 +924,694 @@
             if (!canvas || !canvas.offsetParent) return;
             
             canvas.width = canvas.offsetWidth;
-            canvas.height = 400;
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            if (partialSums.length === 0) return;
-            
-            const padding = 40;
-            const width = canvas.width - 2*padding;
-            const height = canvas.height - 2*padding;
-            
-            const maxSum = Math.max(...partialSums);
-            const xStep = width / partialSums.length;
-            const yScale = height / (maxSum || 1);
+            const padding = 30;
+            const width = canvas.width - 2 * padding;
+            const height = canvas.height - 2 * padding;
             
             ctx.strokeStyle = '#ddd';
-            ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(padding, padding);
             ctx.lineTo(padding, canvas.height - padding);
             ctx.lineTo(canvas.width - padding, canvas.height - padding);
             ctx.stroke();
             
-            // Draw staircase WITHOUT fill
+            if (currentTermIndex === 0) return;
+            
+            const displaySums = partialSums.slice(0, currentTermIndex);
+            const maxSum = Math.max(...partialSums) * 1.1;
+            const minSum = Math.min(0, ...displaySums);
+            const range = (maxSum - minSum) || 1;
+            
             ctx.strokeStyle = '#0f766e';
             ctx.lineWidth = 2;
             ctx.beginPath();
             
-            const idx = animationFrame || partialSums.length - 1;
+            const xStep = width / maxTerms;
+            let prevY = canvas.height - padding - ((0 - minSum) / range) * height;
+            ctx.moveTo(padding, prevY);
             
-            let prevX = padding;
-            let prevY = canvas.height - padding;
-            
-            ctx.moveTo(prevX, prevY);
-            
-            for (let i = 0; i <= idx; i++) {
+            for (let i = 0; i < currentTermIndex; i++) {
                 const x = padding + (i + 1) * xStep;
-                const y = canvas.height - padding - (partialSums[i] * yScale);
-                
+                const y = canvas.height - padding - ((displaySums[i] - minSum) / range) * height;
                 ctx.lineTo(x, prevY);
                 ctx.lineTo(x, y);
-                
-                prevX = x;
                 prevY = y;
             }
             ctx.stroke();
+            
+            ctx.fillStyle = '#0f766e';
+            ctx.beginPath();
+            ctx.arc(padding + currentTermIndex * xStep, prevY, 4, 0, Math.PI * 2);
+            ctx.fill();
         }
         
-        function animateSeries(event) {
-            const btn = event.target;
-            
-            if (animationId) {
-                clearInterval(animationId);
-                animationId = null;
-                btn.textContent = '▶ Animate';
-                return;
-            }
-            
-            animationFrame = 0;
-            btn.textContent = '⏸ Pause';
-            
+        function stepForward() { if (currentTermIndex < maxTerms) { currentTermIndex++; updateDisplays(); drawAllViews(); } }
+        function stepBack() { if (currentTermIndex > 0) { currentTermIndex--; updateDisplays(); drawAllViews(); } }
+        
+        function toggleAnimation() { isAnimating ? stopAnimation() : startAnimation(); }
+        
+        function startAnimation() {
+            isAnimating = true;
+            document.getElementById('animateBtn').textContent = '⏸ Pause';
+            currentTermIndex = 0;
             animationId = setInterval(() => {
-                if (animationFrame < partialSums.length - 1) {
-                    animationFrame++;
-                    drawCurrentView();
-                } else {
-                    clearInterval(animationId);
-                    animationId = null;
-                    btn.textContent = '▶ Animate';
-                }
-            }, 200);
+                if (currentTermIndex < maxTerms) { currentTermIndex++; updateDisplays(); drawAllViews(); }
+                else stopAnimation();
+            }, 60);
         }
         
-        function resetSeries() {
-            if (animationId) {
-                clearInterval(animationId);
-                animationId = null;
-                document.querySelector('.btn-primary').textContent = '▶ Animate';
-            }
-            animationFrame = partialSums.length - 1;
-            updateSeries();
+        function stopAnimation() {
+            isAnimating = false;
+            document.getElementById('animateBtn').textContent = '▶ Play';
+            if (animationId) { clearInterval(animationId); animationId = null; }
         }
         
-        // Lab Functions
-        function drawDivergenceGraphs() {
-            // Draw sequence terms graph
+        function resetToFull() { stopAnimation(); currentTermIndex = maxTerms; updateDisplays(); drawAllViews(); }
+        
+        // =========================================
+        // TAB 2: COMPARISON LAB
+        // =========================================
+        function drawDivergenceGraphs(frame) {
+            const n = Math.min(frame + 1, 100);
+            
             const termsCanvas = document.getElementById('terms-canvas');
             if (termsCanvas) {
                 const ctx = termsCanvas.getContext('2d');
-                termsCanvas.width = termsCanvas.offsetWidth;
-                termsCanvas.height = 250;
-                
                 ctx.clearRect(0, 0, termsCanvas.width, termsCanvas.height);
                 
-                const padding = 30;
-                const width = termsCanvas.width - 2*padding;
-                const height = termsCanvas.height - 2*padding;
+                const p = 30, w = termsCanvas.width - 2*p, h = termsCanvas.height - 2*p;
                 
-                // Draw axes
                 ctx.strokeStyle = '#ddd';
-                ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.moveTo(padding, padding);
-                ctx.lineTo(padding, termsCanvas.height - padding);
-                ctx.lineTo(termsCanvas.width - padding, termsCanvas.height - padding);
+                ctx.moveTo(p, p); ctx.lineTo(p, termsCanvas.height - p); ctx.lineTo(termsCanvas.width - p, termsCanvas.height - p);
                 ctx.stroke();
                 
-                // Draw 1/n terms
                 ctx.strokeStyle = '#0f766e';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
-                
-                for (let n = 1; n <= 50; n++) {
-                    const x = padding + (n/50) * width;
-                    const y = termsCanvas.height - padding - (1/n) * height;
-                    
-                    if (n === 1) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                for (let i = 1; i <= n; i++) {
+                    const x = p + (i/100) * w;
+                    const y = termsCanvas.height - p - (1/i) * h;
+                    i === 1 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
                 }
                 ctx.stroke();
                 
-                // Highlight some points
-                ctx.fillStyle = '#0f766e';
-                for (let n = 1; n <= 10; n++) {
-                    const x = padding + (n/50) * width;
-                    const y = termsCanvas.height - padding - (1/n) * height;
+                if (n > 0) {
+                    ctx.fillStyle = '#f59e0b';
                     ctx.beginPath();
-                    ctx.arc(x, y, 3, 0, Math.PI * 2);
+                    ctx.arc(p + (n/100)*w, termsCanvas.height - p - (1/n)*h, 4, 0, Math.PI*2);
                     ctx.fill();
+                }
+                
+                if (n > 30) {
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.font = '10px sans-serif';
+                    ctx.textAlign = 'right';
+                    ctx.fillText('→ 0', termsCanvas.width - p - 5, termsCanvas.height - p - 8);
                 }
             }
             
-            // Draw partial sums graph
             const sumsCanvas = document.getElementById('sums-canvas');
             if (sumsCanvas) {
                 const ctx = sumsCanvas.getContext('2d');
-                sumsCanvas.width = sumsCanvas.offsetWidth;
-                sumsCanvas.height = 250;
-                
                 ctx.clearRect(0, 0, sumsCanvas.width, sumsCanvas.height);
                 
-                const padding = 30;
-                const width = sumsCanvas.width - 2*padding;
-                const height = sumsCanvas.height - 2*padding;
+                const p = 30, w = sumsCanvas.width - 2*p, h = sumsCanvas.height - 2*p;
                 
-                // Calculate harmonic partial sums
-                const harmonicSums = [];
-                let sum = 0;
-                for (let n = 1; n <= 50; n++) {
-                    sum += 1/n;
-                    harmonicSums.push(sum);
-                }
+                const sums = [];
+                let s = 0;
+                for (let i = 1; i <= n; i++) { s += 1/i; sums.push(s); }
                 
-                const maxSum = harmonicSums[harmonicSums.length - 1];
+                let maxS = 0, ts = 0;
+                for (let i = 1; i <= 100; i++) ts += 1/i;
+                maxS = ts * 1.1;
                 
-                // Draw axes
                 ctx.strokeStyle = '#ddd';
-                ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.moveTo(padding, padding);
-                ctx.lineTo(padding, sumsCanvas.height - padding);
-                ctx.lineTo(sumsCanvas.width - padding, sumsCanvas.height - padding);
+                ctx.moveTo(p, p); ctx.lineTo(p, sumsCanvas.height - p); ctx.lineTo(sumsCanvas.width - p, sumsCanvas.height - p);
                 ctx.stroke();
                 
-                // Draw partial sums with highlighted rises
+                if (n > 0) {
+                    ctx.strokeStyle = '#0f766e';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    for (let i = 0; i < sums.length; i++) {
+                        const x = p + ((i+1)/100) * w;
+                        const y = sumsCanvas.height - p - (sums[i]/maxS) * h;
+                        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.beginPath();
+                    ctx.arc(p + (n/100)*w, sumsCanvas.height - p - (sums[n-1]/maxS)*h, 4, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                
+                if (n > 30) {
+                    ctx.fillStyle = '#c62828';
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.textAlign = 'right';
+                    ctx.fillText('→ ∞', sumsCanvas.width - p - 5, p + 15);
+                }
+            }
+        }
+        
+        function animateDivergenceGraphs() {
+            const btn = document.getElementById('divergenceAnimateBtn');
+            if (divergenceAnimationId) {
+                clearInterval(divergenceAnimationId);
+                divergenceAnimationId = null;
+                btn.textContent = '▶ Animate';
+                return;
+            }
+            divergenceFrame = 0;
+            btn.textContent = '⏸ Pause';
+            divergenceAnimationId = setInterval(() => {
+                if (divergenceFrame < 100) { divergenceFrame++; drawDivergenceGraphs(divergenceFrame); }
+                else { clearInterval(divergenceAnimationId); divergenceAnimationId = null; btn.textContent = '🔄 Replay'; }
+            }, 40);
+        }
+        
+        function loadLabScenario(scenario, card) {
+            document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+            if (card) card.classList.add('active');
+            
+            const canvas = document.getElementById('lab-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const p = 40, w = canvas.width - 2*p, h = canvas.height - 2*p;
+            const n = 50;
+            
+            let series1 = [], series2 = [], series3 = [];
+            let label1 = '', label2 = '', label3 = '';
+            let resultText = '', resultClass = '';
+            
+            for (let i = 1; i <= n; i++) {
+                switch(scenario) {
+                    case 'ceiling':
+                        series1.push(sumTo(j => 1/Math.pow(j,1.5), i)); label1 = '1/n^1.5 (conv)';
+                        series2.push(sumTo(j => 1/(j*j), i)); label2 = '1/n² (ours)';
+                        resultText = '<strong>✓ Conclusive!</strong> Our series is smaller than one that converges → ours must converge.';
+                        resultClass = 'valid';
+                        break;
+                    case 'floor':
+                        series1.push(sumTo(j => 1/j, i)); label1 = '1/n (div)';
+                        series2.push(sumTo(j => 1/Math.sqrt(j), i)); label2 = '1/√n (ours)';
+                        resultText = '<strong>✓ Conclusive!</strong> Our series is bigger than one that diverges → ours must diverge.';
+                        resultClass = 'valid';
+                        break;
+                    case 'bigger-converge':
+                        series1.push(sumTo(j => 1/(j*j), i)); label1 = '1/n² (conv)';
+                        series2.push(sumTo(j => 1/j, i)); label2 = '1/n (div)';
+                        series3.push(sumTo(j => 1/Math.pow(j,1.5), i)); label3 = '1/n^1.5 (conv)';
+                        resultText = '<strong>✗ Inconclusive!</strong> Bigger than convergent could go either way. Example: 1/n diverges, but 1/n^1.5 converges — both are bigger than 1/n².';
+                        resultClass = 'invalid';
+                        break;
+                    case 'smaller-diverge':
+                        series1.push(sumTo(j => 1/Math.sqrt(j), i)); label1 = '1/√n (div)';
+                        series2.push(sumTo(j => 1/(j*j), i)); label2 = '1/n² (conv)';
+                        series3.push(sumTo(j => 1/j, i)); label3 = '1/n (div)';
+                        resultText = '<strong>✗ Inconclusive!</strong> Smaller than divergent could go either way. Example: 1/n² converges, but 1/n diverges — both are smaller than 1/√n.';
+                        resultClass = 'invalid';
+                        break;
+                }
+            }
+            
+            const allVals = [...series1, ...series2, ...(series3 || [])];
+            const maxV = Math.max(...allVals) * 1.05;
+            const yScale = h / maxV;
+            const xStep = w / n;
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(p, p); ctx.lineTo(p, canvas.height - p); ctx.lineTo(canvas.width - p, canvas.height - p);
+            ctx.stroke();
+            
+            // Series 1 (orange)
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            series1.forEach((v, i) => { const x = p + i*xStep, y = canvas.height - p - v*yScale; i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); });
+            ctx.stroke();
+            
+            // Series 2 (teal)
+            ctx.strokeStyle = '#0f766e';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            series2.forEach((v, i) => { const x = p + i*xStep, y = canvas.height - p - v*yScale; i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); });
+            ctx.stroke();
+            
+            // Series 3 if exists (purple)
+            if (series3.length) {
+                ctx.strokeStyle = '#7c3aed';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                series3.forEach((v, i) => { const x = p + i*xStep, y = canvas.height - p - v*yScale; i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); });
+                ctx.stroke();
+            }
+            
+            // Labels
+            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#f59e0b'; ctx.fillText('● ' + label1, p + 5, p + 12);
+            ctx.fillStyle = '#0f766e'; ctx.fillText('● ' + label2, p + 5, p + 26);
+            if (label3) { ctx.fillStyle = '#7c3aed'; ctx.fillText('● ' + label3, p + 5, p + 40); }
+            
+            const result = document.getElementById('lab-result');
+            result.innerHTML = resultText;
+            result.className = 'lab-result ' + resultClass;
+            result.style.display = 'block';
+        }
+        
+        function sumTo(fn, n) { let s = 0; for (let i = 1; i <= n; i++) s += fn(i); return s; }
+        
+        // =========================================
+        // TAB 3: LEARN COMPARISON
+        // =========================================
+        const learnProblems = [
+            {
+                latex: '\\sum_{n=1}^{\\infty} \\frac{n}{n^2+1}',
+                termLatex: '\\frac{n}{n^2+1}',
+                fn: n => n/(n*n+1),
+                limitZero: true,
+                diverges: true,
+                known: false, // Need comparison to determine
+                comparisons: [
+                    { id: '1/n', latex: '\\frac{1}{n}', fn: n => 1/n, diverges: true },
+                    { id: '1/n^2', latex: '\\frac{1}{n^2}', fn: n => 1/(n*n), diverges: false },
+                    { id: '1/sqrt(n)', latex: '\\frac{1}{\\sqrt{n}}', fn: n => 1/Math.sqrt(n), diverges: true }
+                ],
+                bestComp: '1/n',
+                feedback: {
+                    '1/n': { useful: true, text: "For large n, n/(n²+1) ≈ n/n² = 1/n. They behave the same, so both diverge!", algebra: ["n²+1 ≈ n² for large n", "n/(n²+1) ≈ n/n² = 1/n", "Since Σ1/n diverges → ours diverges"] },
+                    '1/n^2': { useful: false, text: "Our series is bigger than 1/n², but 1/n² converges. Being bigger than something convergent doesn't tell us the behavior.", algebra: ["n/(n²+1) > 1/n² for all n", "But Σ1/n² converges", "Bigger than convergent = inconclusive"] },
+                    '1/sqrt(n)': { useful: false, text: "Our series is smaller than 1/√n, but both happen to diverge. This comparison doesn't prove divergence though.", algebra: ["n/(n²+1) < 1/√n eventually", "Σ1/√n diverges", "Smaller than divergent = inconclusive"] }
+                }
+            },
+            {
+                latex: '\\sum_{n=1}^{\\infty} \\frac{1}{n^{3/2}}',
+                termLatex: '\\frac{1}{n^{3/2}} = \\frac{1}{n\\sqrt{n}}',
+                fn: n => 1/Math.pow(n, 1.5),
+                limitZero: true,
+                diverges: false,
+                known: true, // p-series, we know the answer
+                knownReason: "This is a p-series with p = 3/2 > 1, so it converges.",
+                comparisons: [
+                    { id: '1/n', latex: '\\frac{1}{n}', fn: n => 1/n, diverges: true },
+                    { id: '1/n^2', latex: '\\frac{1}{n^2}', fn: n => 1/(n*n), diverges: false },
+                    { id: '1/sqrt(n)', latex: '\\frac{1}{\\sqrt{n}}', fn: n => 1/Math.sqrt(n), diverges: true }
+                ],
+                bestComp: '1/n',
+                feedback: {
+                    '1/n': { useful: true, text: "Our series is smaller than 1/n. But wait — 1/n diverges! Being smaller than divergent doesn't help. Let's learn from this.", algebra: ["1/n^(3/2) < 1/n for n > 1", "But Σ1/n diverges", "Smaller than divergent = can't conclude!"], note: "This shows why we need a convergent ceiling, not a divergent comparison." },
+                    '1/n^2': { useful: true, text: "Our series is bigger than 1/n². Since 1/n² converges, being bigger doesn't directly prove convergence. We need a different approach here.", algebra: ["1/n^(3/2) > 1/n² for n > 1", "Σ1/n² converges", "Bigger than convergent = can't use comparison"], note: "For p-series, we use the p-series test directly: p = 1.5 > 1 → converges." },
+                    '1/sqrt(n)': { useful: true, text: "Our series is smaller than 1/√n. But 1/√n diverges, so being smaller doesn't prove convergence.", algebra: ["1/n^(3/2) < 1/n^(0.5) = 1/√n", "But Σ1/√n diverges", "Smaller than divergent = inconclusive"], note: "This is why comparison sometimes can't help — we need the p-series test." }
+                }
+            },
+            {
+                latex: '\\sum_{n=1}^{\\infty} \\frac{1}{n^2+n}',
+                termLatex: '\\frac{1}{n^2+n}',
+                fn: n => 1/(n*n+n),
+                limitZero: true,
+                diverges: false,
+                known: false,
+                comparisons: [
+                    { id: '1/n', latex: '\\frac{1}{n}', fn: n => 1/n, diverges: true },
+                    { id: '1/n^2', latex: '\\frac{1}{n^2}', fn: n => 1/(n*n), diverges: false }
+                ],
+                bestComp: '1/n^2',
+                feedback: {
+                    '1/n': { useful: false, text: "Our series is smaller than 1/n, but 1/n diverges. Smaller than divergent doesn't tell us anything.", algebra: ["1/(n²+n) < 1/n for n ≥ 1", "Σ1/n diverges", "Smaller than divergent = inconclusive"] },
+                    '1/n^2': { useful: true, text: "Our series is actually smaller than 1/n² for large n (since n²+n > n²). Since 1/n² converges, ours is trapped below and must converge!", algebra: ["For n ≥ 1: n²+n > n²", "So 1/(n²+n) < 1/n²", "Smaller than convergent → converges!"] }
+                }
+            }
+        ];
+        
+        let currentLearnProblem = null;
+        let learnStep = 0;
+        let selectedLearnComp = null;
+        
+        function newLearnExample() {
+            currentLearnProblem = learnProblems[Math.floor(Math.random() * learnProblems.length)];
+            learnStep = 0;
+            selectedLearnComp = null;
+            
+            renderMath(document.getElementById('learnSeriesFormula'), currentLearnProblem.latex, true);
+            
+            const knownInfo = document.getElementById('learnKnownInfo');
+            if (currentLearnProblem.known) {
+                knownInfo.className = 'known-info ' + (currentLearnProblem.diverges ? 'diverges' : 'converges');
+                knownInfo.innerHTML = `<strong>Known:</strong> ${currentLearnProblem.knownReason}<br><em>Let's explore comparison to see what works and what doesn't.</em>`;
+                knownInfo.style.display = 'block';
+            } else {
+                knownInfo.style.display = 'none';
+            }
+            
+            // Step 1
+            const step1 = document.getElementById('learnStep1');
+            step1.className = 'step-section active';
+            document.getElementById('learnLimitChoice').innerHTML = `
+                <button class="choice-btn" onclick="checkLearnLimit(true, this)">Yes, aₙ → 0</button>
+                <button class="choice-btn" onclick="checkLearnLimit(false, this)">No, aₙ ↛ 0</button>
+            `;
+            
+            document.getElementById('learnStep2').style.display = 'none';
+            document.getElementById('learnAlgebraBox').classList.remove('show');
+            document.getElementById('learnGraphNote').textContent = '';
+            document.getElementById('learnMathpalText').textContent = 'First, check: does the general term go to zero as n → ∞?';
+            
+            drawLearnGraph();
+        }
+        
+        function checkLearnLimit(isZero, btn) {
+            const correct = currentLearnProblem.limitZero === isZero;
+            const buttons = document.querySelectorAll('#learnLimitChoice .choice-btn');
+            buttons.forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+            if (btn) btn.classList.add(correct ? 'correct' : 'wrong');
+            
+            if (correct) {
+                if (isZero) {
+                    document.getElementById('learnStep1').className = 'step-section completed';
+                    document.getElementById('learnStep2').style.display = 'block';
+                    document.getElementById('learnStep2').className = 'step-section active';
+                    
+                    // Build comparison options
+                    const optDiv = document.getElementById('learnCompOptions');
+                    optDiv.innerHTML = currentLearnProblem.comparisons.map(c => `
+                        <button class="comp-option" onclick="selectLearnComp('${c.id}', this)">
+                            <span id="comp-${c.id.replace(/[^a-z0-9]/g,'')}">${c.id}</span>
+                            <span class="behavior-tag ${c.diverges ? 'diverges' : 'converges'}">${c.diverges ? 'diverges' : 'converges'}</span>
+                        </button>
+                    `).join('');
+                    
+                    // Render math in options
+                    currentLearnProblem.comparisons.forEach(c => {
+                        const el = document.getElementById('comp-' + c.id.replace(/[^a-z0-9]/g,''));
+                        if (el) renderMath(el, c.latex);
+                    });
+                    
+                    document.getElementById('learnMathpalText').textContent = "Good! The limit is 0, so the divergence test is inconclusive. Now let's try comparison. Which series should we compare with?";
+                } else {
+                    document.getElementById('learnMathpalText').textContent = "If the limit isn't 0, the series diverges immediately by the divergence test!";
+                }
+            } else {
+                document.getElementById('learnMathpalText').textContent = currentLearnProblem.limitZero 
+                    ? "Check again — as n gets large, this term does go to 0."
+                    : "Actually, this term doesn't go to 0. Think about what happens for large n.";
+            }
+        }
+        
+        function selectLearnComp(compId, btn) {
+            selectedLearnComp = compId;
+            document.querySelectorAll('#learnCompOptions .comp-option').forEach(b => b.classList.remove('selected'));
+            if (btn) btn.classList.add('selected');
+            
+            const feedback = currentLearnProblem.feedback[compId];
+            document.getElementById('learnMathpalText').textContent = feedback.text;
+            
+            // Show algebra
+            const algebraBox = document.getElementById('learnAlgebraBox');
+            document.getElementById('learnAlgebraSteps').innerHTML = feedback.algebra.map(s => `<div class="algebra-step">• ${s}</div>`).join('');
+            algebraBox.classList.add('show');
+            
+            document.getElementById('learnGraphNote').textContent = feedback.note || '';
+            
+            drawLearnGraph();
+        }
+        
+        function drawLearnGraph() {
+            const canvas = document.getElementById('learn-canvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (!currentLearnProblem) return;
+            
+            const p = 45, w = canvas.width - 2*p, h = canvas.height - 2*p;
+            const n = 60;
+            
+            // Our series
+            const ourSums = [];
+            let s = 0;
+            for (let i = 1; i <= n; i++) { s += currentLearnProblem.fn(i); ourSums.push(s); }
+            
+            // Comparison if selected
+            let compSums = [];
+            if (selectedLearnComp) {
+                const comp = currentLearnProblem.comparisons.find(c => c.id === selectedLearnComp);
+                s = 0;
+                for (let i = 1; i <= n; i++) { s += comp.fn(i); compSums.push(s); }
+            }
+            
+            const allV = [...ourSums, ...compSums];
+            const maxV = Math.max(...allV) * 1.1;
+            const yScale = h / maxV;
+            const xStep = w / n;
+            
+            // Axes
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(p, p); ctx.lineTo(p, canvas.height - p); ctx.lineTo(canvas.width - p, canvas.height - p);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#666';
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(maxV.toFixed(1), p - 5, p + 5);
+            ctx.fillText('0', p - 5, canvas.height - p + 5);
+            ctx.textAlign = 'center';
+            ctx.fillText('n', canvas.width / 2, canvas.height - 5);
+            
+            // Comparison (orange)
+            if (compSums.length) {
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                compSums.forEach((v, i) => { const x = p + (i+1)*xStep, y = canvas.height - p - v*yScale; i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); });
+                ctx.stroke();
+            }
+            
+            // Our series (teal)
+            ctx.strokeStyle = '#0f766e';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ourSums.forEach((v, i) => { const x = p + (i+1)*xStep, y = canvas.height - p - v*yScale; i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); });
+            ctx.stroke();
+        }
+        
+        // =========================================
+        // TAB 4: TEST YOURSELF
+        // =========================================
+        const testProblems = [
+            {
+                latex: '\\sum_{n=1}^{\\infty} \\frac{n+1}{n^2}',
+                fn: n => (n+1)/(n*n),
+                limit: '0',
+                diverges: true,
+                correctComp: '1/n',
+                correctReason: 'bigger-div',
+                solution: [
+                    "Given: Σ (n+1)/n²",
+                    "Step 1: Check if aₙ → 0",
+                    "(n+1)/n² = 1/n + 1/n² → 0 as n → ∞ ✓",
+                    "Step 2: Compare with 1/n",
+                    "For n ≥ 1: (n+1)/n² = 1/n + 1/n² > 1/n",
+                    "Since (n+1)/n² > 1/n and Σ(1/n) diverges,",
+                    "By comparison test: Σ(n+1)/n² DIVERGES"
+                ]
+            },
+            {
+                latex: '\\sum_{n=1}^{\\infty} \\frac{1}{n^2+1}',
+                fn: n => 1/(n*n+1),
+                limit: '0',
+                diverges: false,
+                correctComp: '1/n^2',
+                correctReason: 'smaller-conv',
+                solution: [
+                    "Given: Σ 1/(n²+1)",
+                    "Step 1: Check if aₙ → 0",
+                    "1/(n²+1) → 0 as n → ∞ ✓",
+                    "Step 2: Compare with 1/n²",
+                    "For n ≥ 1: n²+1 > n², so 1/(n²+1) < 1/n²",
+                    "Since 1/(n²+1) < 1/n² and Σ(1/n²) converges,",
+                    "By comparison test: Σ 1/(n²+1) CONVERGES"
+                ]
+            },
+            {
+                latex: '\\sum_{n=2}^{\\infty} \\frac{1}{n-1}',
+                fn: n => 1/(n-1),
+                limit: '0',
+                diverges: true,
+                correctComp: '1/n',
+                correctReason: 'bigger-div',
+                solution: [
+                    "Given: Σ 1/(n-1) for n ≥ 2",
+                    "Step 1: Check if aₙ → 0",
+                    "1/(n-1) → 0 as n → ∞ ✓",
+                    "Step 2: Compare with 1/n",
+                    "For n ≥ 2: n-1 < n, so 1/(n-1) > 1/n",
+                    "Since 1/(n-1) > 1/n and Σ(1/n) diverges,",
+                    "By comparison test: Σ 1/(n-1) DIVERGES"
+                ]
+            }
+        ];
+        
+        let currentTestProblem = null;
+        let testView = 'numerical';
+        let testLimitPassed = false;
+        
+        function newTestProblem() {
+            currentTestProblem = testProblems[Math.floor(Math.random() * testProblems.length)];
+            testLimitPassed = false;
+            
+            renderMath(document.getElementById('testSeriesFormula'), currentTestProblem.latex, true);
+            
+            document.getElementById('testStep1').className = 'step-section active';
+            document.getElementById('testStep2').style.display = 'none';
+            document.getElementById('limitInput').value = '';
+            document.getElementById('limitFeedback').innerHTML = '';
+            document.getElementById('testCompSelect').value = '';
+            document.getElementById('testReasonSelect').value = '';
+            document.getElementById('solutionBox').classList.remove('show');
+            document.getElementById('testMathpalText').textContent = 'Start by finding the limit of aₙ as n → ∞. Type your answer below.';
+            
+            drawTestView();
+        }
+        
+        function checkLimit() {
+            const input = document.getElementById('limitInput').value.trim().toLowerCase();
+            const correct = input === '0' || input === 'zero';
+            
+            const feedback = document.getElementById('limitFeedback');
+            if (correct) {
+                feedback.innerHTML = '<span style="color: var(--success);">✓ Correct! The limit is 0, so divergence test is inconclusive.</span>';
+                testLimitPassed = true;
+                document.getElementById('testStep1').className = 'step-section completed';
+                document.getElementById('testStep2').style.display = 'block';
+                document.getElementById('testStep2').className = 'step-section active';
+                document.getElementById('testMathpalText').textContent = 'Good! Now choose a comparison series and explain your reasoning.';
+            } else if (input === '1' || input === 'infinity' || input === '∞') {
+                feedback.innerHTML = '<span style="color: var(--accent-red);">Not quite. Think about what happens to the numerator vs denominator as n grows.</span>';
+            } else {
+                feedback.innerHTML = '<span style="color: var(--accent-amber);">Try again. Calculate the limit as n → ∞.</span>';
+            }
+        }
+        
+        function checkComparison() {
+            const comp = document.getElementById('testCompSelect').value;
+            const reason = document.getElementById('testReasonSelect').value;
+            
+            if (!comp || !reason) {
+                document.getElementById('testMathpalText').textContent = 'Please select both a comparison series and your reasoning.';
+                return;
+            }
+            
+            const correctComp = comp === currentTestProblem.correctComp;
+            const correctReason = reason === currentTestProblem.correctReason;
+            
+            if (correctComp && correctReason) {
+                document.getElementById('testMathpalText').textContent = "Excellent! That's exactly right. Here's the complete solution:";
+                showSolution();
+            } else if (!correctReason) {
+                // Explain why the reasoning is wrong without revealing answer
+                if (reason === 'smaller-conv' || reason === 'bigger-div') {
+                    document.getElementById('testMathpalText').textContent = "Your reasoning pattern is correct (smaller than convergent = converges, bigger than divergent = diverges). But check if your comparison is actually correct — is our series really " + (reason === 'smaller-conv' ? "smaller" : "bigger") + " than " + comp + "?";
+                } else {
+                    document.getElementById('testMathpalText').textContent = "Remember: 'bigger than convergent' and 'smaller than divergent' are inconclusive comparisons. You need either 'smaller than convergent' (to prove convergence) or 'bigger than divergent' (to prove divergence).";
+                }
+            } else {
+                document.getElementById('testMathpalText').textContent = "The reasoning approach is right, but that comparison series might not give you what you need. Think about which famous series your series most resembles for large n.";
+            }
+        }
+        
+        function showSolution() {
+            const box = document.getElementById('solutionBox');
+            document.getElementById('solutionSteps').innerHTML = currentTestProblem.solution.map(s => `<div class="solution-step">${s}</div>`).join('');
+            box.classList.add('show');
+        }
+        
+        function switchTestView(view, btn) {
+            testView = view;
+            document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            drawTestView();
+        }
+        
+        function drawTestView() {
+            const canvas = document.getElementById('test-canvas');
+            if (!canvas || !currentTestProblem) return;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const p = 40, w = canvas.width - 2*p, h = canvas.height - 2*p;
+            const n = 50;
+            
+            // Calculate sums
+            const sums = [];
+            let s = 0;
+            for (let i = 1; i <= n; i++) { s += currentTestProblem.fn(i); sums.push(s); }
+            
+            const maxV = Math.max(...sums) * 1.1;
+            
+            if (testView === 'numerical') {
+                // Show numerical display
+                ctx.fillStyle = '#1a1a1a';
+                ctx.fillRect(p, p, w, h);
+                
+                ctx.fillStyle = '#0f0';
+                ctx.font = '20px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(`S₅₀ = ${sums[49].toFixed(6)}`, canvas.width/2, canvas.height/2 - 20);
+                
+                ctx.fillStyle = '#888';
+                ctx.font = '14px monospace';
+                ctx.fillText(`Term 50: ${currentTestProblem.fn(50).toFixed(6)}`, canvas.width/2, canvas.height/2 + 20);
+            } else {
+                // Staircase or number line
+                ctx.strokeStyle = '#ddd';
+                ctx.beginPath();
+                ctx.moveTo(p, p); ctx.lineTo(p, canvas.height - p); ctx.lineTo(canvas.width - p, canvas.height - p);
+                ctx.stroke();
+                
+                const yScale = h / maxV;
+                const xStep = w / n;
+                
                 ctx.strokeStyle = '#0f766e';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 
-                for (let i = 0; i < harmonicSums.length; i++) {
-                    const x = padding + ((i+1)/50) * width;
-                    const y = sumsCanvas.height - padding - (harmonicSums[i]/maxSum) * height * 0.9;
-                    
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                    
-                    // Highlight the rise for first few terms
-                    if (i < 10) {
-                        ctx.fillStyle = '#f59e0b';
-                        ctx.beginPath();
-                        ctx.arc(x, y, 3, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
+                if (testView === 'staircase') {
+                    let prevY = canvas.height - p;
+                    ctx.moveTo(p, prevY);
+                    sums.forEach((v, i) => {
+                        const x = p + (i+1)*xStep;
+                        const y = canvas.height - p - v*yScale;
+                        ctx.lineTo(x, prevY);
+                        ctx.lineTo(x, y);
+                        prevY = y;
+                    });
+                } else {
+                    sums.forEach((v, i) => {
+                        const x = p + (i+1)*xStep;
+                        const y = canvas.height - p - v*yScale;
+                        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                    });
                 }
                 ctx.stroke();
+                
+                // Labels
+                ctx.fillStyle = '#666';
+                ctx.font = '10px sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(maxV.toFixed(1), p - 5, p + 5);
             }
-        }
-        
-        function loadLabScenario(scenario) {
-            document.querySelectorAll('.scenario-card').forEach(card => card.classList.remove('active'));
-            event.target.closest('.scenario-card').classList.add('active');
-            
-            const canvas = document.getElementById('lab-canvas');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 350;
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const padding = 40;
-            const width = canvas.width - 2*padding;
-            const height = canvas.height - 2*padding;
-            
-            let series1 = [];
-            let series2 = [];
-            let resultText = '';
-            let resultClass = '';
-            
-            for (let n = 1; n <= 50; n++) {
-                switch(scenario) {
-                    case 'ceiling':
-                        series1.push(3 * (1 - Math.pow(0.5, n)));
-                        series2.push(2 * (1 - Math.pow(0.6, n)));
-                        resultText = "✓ <strong>Valid comparison!</strong> The teal series (ours) is always smaller than the orange series (comparison). Since the orange converges, the teal is trapped below this ceiling and must converge too!";
-                        resultClass = 'valid';
-                        break;
-                    
-                    case 'floor':
-                        series1.push(Math.log(n + 1));
-                        series2.push(Math.sqrt(n));
-                        resultText = "✓ <strong>Valid comparison!</strong> The teal series (ours) is always larger than the orange series (comparison). Since the orange diverges, the teal is pushed up by this rising floor and must diverge too!";
-                        resultClass = 'valid';
-                        break;
-                    
-                    case 'bigger-converge':
-                        series1.push(1 * (1 - Math.pow(0.3, n)));
-                        series2.push(2 * (1 - Math.pow(0.7, n)));
-                        resultText = "✗ <strong>Can't conclude!</strong> The teal series is bigger than the orange (which converges). But being bigger than something small doesn't mean you're infinite. In this case, the teal series also converges (to a larger value).";
-                        resultClass = 'invalid';
-                        break;
-                    
-                    case 'smaller-diverge':
-                        series1.push(n);
-                        series2.push(Math.log(n + 1));
-                        resultText = "✗ <strong>Can't conclude!</strong> The teal series is smaller than the orange (which diverges). But being smaller than infinity tells you nothing - you could still diverge slowly, or you might converge. Here, the teal actually diverges too, just more slowly!";
-                        resultClass = 'invalid';
-                        break;
-                }
-            }
-            
-            const maxVal = Math.max(...series1, ...series2);
-            const yScale = height / maxVal;
-            const xStep = width / 50;
-            
-            ctx.strokeStyle = '#ddd';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(padding, padding);
-            ctx.lineTo(padding, canvas.height - padding);
-            ctx.lineTo(canvas.width - padding, canvas.height - padding);
-            ctx.stroke();
-            
-            ctx.strokeStyle = '#f59e0b';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            for (let i = 0; i < series1.length; i++) {
-                const x = padding + i * xStep;
-                const y = canvas.height - padding - (series1[i] * yScale);
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-            
-            ctx.strokeStyle = '#0f766e';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            for (let i = 0; i < series2.length; i++) {
-                const x = padding + i * xStep;
-                const y = canvas.height - padding - (series2[i] * yScale);
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-            
-            ctx.font = '14px sans-serif';
-            ctx.fillStyle = '#f59e0b';
-            ctx.fillText('Comparison Series', canvas.width - 150, 30);
-            ctx.fillStyle = '#0f766e';
-            ctx.fillText('Our Series', canvas.width - 150, 50);
-            
-            const result = document.getElementById('lab-result');
-            result.innerHTML = resultText;
-            result.className = `lab-result ${resultClass}`;
-            result.style.display = 'block';
-        }
-        
-        // Challenge Functions
-        function newProblem() {
-            currentProblem = challengeProblems[Math.floor(Math.random() * challengeProblems.length)];
-            currentStep = 0;
-            correctPath = [];
-            mathpalShown = false;
-            
-            // Display problem with proper math rendering
-            if (typeof katex !== 'undefined') {
-                katex.render(currentProblem.latex, document.getElementById('problemSeries'), {displayMode: true});
-            } else {
-                document.getElementById('problemSeries').innerHTML = currentProblem.latex;
-            }
-            
-            // Build initial flowchart
-            buildFlowchart();
-            
-            // Hide final solution
-            document.getElementById('finalSolution').classList.remove('show');
-        }
-        
-        function buildFlowchart() {
-            const container = document.getElementById('flowchart');
-            container.innerHTML = '';
-            
-            // Show current step
-            if (currentStep < currentProblem.flowchart.length) {
-                const step = currentProblem.flowchart[currentStep];
-                
-                const stepDiv = document.createElement('div');
-                stepDiv.className = 'flow-step';
-                
-                // Create question div with proper math rendering
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'flow-question';
-                if (typeof katex !== 'undefined' && step.question) {
-                    katex.render(step.question, questionDiv);
-                } else {
-                    questionDiv.textContent = step.questionText || step.question;
-                }
-                
-                stepDiv.appendChild(questionDiv);
-                
-                // Create options
-                const optionsDiv = document.createElement('div');
-                optionsDiv.className = 'flow-options';
-                optionsDiv.innerHTML = step.options.map((opt, i) => 
-                    `<button class="flow-option" onclick="selectOption(${i})">${opt}</button>`
-                ).join('');
-                stepDiv.appendChild(optionsDiv);
-                
-                // Create error box (hidden)
-                const errorBox = document.createElement('div');
-                errorBox.className = 'error-box';
-                errorBox.id = 'errorBox';
-                stepDiv.appendChild(errorBox);
-                
-                // Create hint button
-                const hintDiv = document.createElement('div');
-                hintDiv.className = 'hint-button';
-                hintDiv.innerHTML = `<button class="hint-btn" onclick="showMathPalHint()">💭 Ask MathPal</button>`;
-                stepDiv.appendChild(hintDiv);
-                
-                // Create MathPal comment (hidden initially)
-                const mathpalDiv = document.createElement('div');
-                mathpalDiv.className = 'mathpal-comment';
-                mathpalDiv.id = 'mathpalComment';
-                mathpalDiv.innerHTML = `<strong>MathPal:</strong> ${step.mathpal}`;
-                stepDiv.appendChild(mathpalDiv);
-                
-                container.appendChild(stepDiv);
-            }
-            
-            // Show previous correct steps
-            correctPath.forEach((step, i) => {
-                const stepDiv = document.createElement('div');
-                stepDiv.className = 'flow-step correct';
-                stepDiv.style.marginTop = i === 0 ? '0' : '-1rem';
-                
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'flow-question';
-                if (typeof katex !== 'undefined' && currentProblem.flowchart[i].question) {
-                    katex.render(currentProblem.flowchart[i].question, questionDiv);
-                } else {
-                    questionDiv.textContent = currentProblem.flowchart[i].questionText || currentProblem.flowchart[i].question;
-                }
-                
-                stepDiv.appendChild(questionDiv);
-                
-                const answerDiv = document.createElement('div');
-                answerDiv.style.textAlign = 'center';
-                answerDiv.style.color = 'var(--success)';
-                answerDiv.style.fontWeight = '600';
-                answerDiv.textContent = `✓ ${currentProblem.flowchart[i].options[step]}`;
-                stepDiv.appendChild(answerDiv);
-                
-                container.insertBefore(stepDiv, container.firstChild);
-            });
-        }
-        
-        function showMathPalHint() {
-            if (!mathpalShown) {
-                mathpalShown = true;
-                setTimeout(() => {
-                    document.getElementById('mathpalComment').classList.add('show');
-                }, 500);
-            }
-        }
-        
-        function selectOption(optionIndex) {
-            const step = currentProblem.flowchart[currentStep];
-            
-            if (optionIndex === step.correct) {
-                // Correct answer
-                correctPath.push(optionIndex);
-                currentStep++;
-                mathpalShown = false;
-                
-                if (currentStep >= currentProblem.flowchart.length) {
-                    // All steps complete - show final solution
-                    setTimeout(() => {
-                        showFinalSolution();
-                    }, 500);
-                } else {
-                    // Move to next step
-                    buildFlowchart();
-                }
-            } else {
-                // Wrong answer - show error
-                const errorBox = document.getElementById('errorBox');
-                errorBox.innerHTML = `
-                    <strong>Not quite!</strong> ${step.errorMessage}
-                    <div style="margin-top: 0.5rem;">
-                        <button class="btn" onclick="buildFlowchart()">Try Again</button>
-                        <button class="btn" onclick="skipToNext()" style="margin-left: 0.5rem;">Show Answer</button>
-                    </div>
-                `;
-                errorBox.classList.add('show');
-            }
-        }
-        
-        function skipToNext() {
-            const step = currentProblem.flowchart[currentStep];
-            correctPath.push(step.correct);
-            currentStep++;
-            mathpalShown = false;
-            
-            if (currentStep >= currentProblem.flowchart.length) {
-                showFinalSolution();
-            } else {
-                buildFlowchart();
-            }
-        }
-        
-        function showFinalSolution() {
-            // Build complete flowchart
-            const container = document.getElementById('flowchart');
-            container.innerHTML = '';
-            
-            currentProblem.flowchart.forEach((step, i) => {
-                const stepDiv = document.createElement('div');
-                stepDiv.className = 'flow-step correct';
-                stepDiv.style.marginBottom = '0.5rem';
-                
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'flow-question';
-                if (typeof katex !== 'undefined' && step.question) {
-                    katex.render(step.question, questionDiv);
-                } else {
-                    questionDiv.textContent = step.questionText || step.question;
-                }
-                
-                stepDiv.appendChild(questionDiv);
-                
-                const answerDiv = document.createElement('div');
-                answerDiv.style.textAlign = 'center';
-                answerDiv.style.color = 'var(--success)';
-                answerDiv.style.fontWeight = '600';
-                answerDiv.textContent = `✓ ${step.options[correctPath[i] || step.correct]}`;
-                stepDiv.appendChild(answerDiv);
-                
-                container.appendChild(stepDiv);
-            });
-            
-            // Animate into final solution with proper math rendering
-            setTimeout(() => {
-                const finalSol = document.getElementById('finalSolution');
-                const content = document.getElementById('solutionContent');
-                
-                content.innerHTML = '';
-                currentProblem.solution.forEach((line, i) => {
-                    const lineDiv = document.createElement('div');
-                    lineDiv.className = 'solution-line';
-                    lineDiv.style.animationDelay = `${i * 0.1}s`;
-                    
-                    if (typeof katex !== 'undefined' && line.includes('\\')) {
-                        katex.render(line, lineDiv);
-                    } else {
-                        lineDiv.textContent = line;
-                    }
-                    
-                    content.appendChild(lineDiv);
-                });
-                
-                finalSol.classList.add('show');
-                finalSol.scrollIntoView({ behavior: 'smooth' });
-            }, 1000);
-        }
-        
-        function showSolution() {
-            // Skip to complete solution
-            correctPath = currentProblem.flowchart.map(step => step.correct);
-            currentStep = currentProblem.flowchart.length;
-            showFinalSolution();
         }
     </script>
 </body>
