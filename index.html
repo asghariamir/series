@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Version 6.0 - Updated number line to match Tab 3 style -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Series Explorer v6 | Mathswell</title>
+    <title>Series Explorer | Mathswell</title>
     <link rel="icon" href="/logo-mathswell-square-mirror.ico" type="image/x-icon">
     <link rel="icon" href="/logo-mathswell-square-mirror.svg" type="image/svg+xml">
     
@@ -270,6 +269,98 @@
         }
         .mathpal-header { display: flex; align-items: center; gap: 0.4rem; font-weight: 600; color: var(--primary); font-size: 0.8rem; margin-bottom: 0.4rem; }
         .mathpal-text { font-size: 0.85rem; line-height: 1.4; }
+        
+        /* MathPal Disclosure Banner */
+        .ai-disclosure-banner {
+            background: var(--interactive);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+        }
+        .ai-disclosure-banner .banner-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        .ai-disclosure-banner .banner-text {
+            text-align: left;
+        }
+        .ai-disclosure-banner .banner-title {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .ai-disclosure-banner .banner-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        /* MathPal Avatar */
+        .mathpal-avatar {
+            animation: mathpal-bob 3s ease-in-out infinite;
+        }
+        @keyframes mathpal-bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .robot-eye {
+            animation: robot-blink 5s infinite;
+        }
+        @keyframes robot-blink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.1; }
+        }
+        
+        /* MathPal Thinking Animation */
+        .mathpal-thinking {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .mathpal-thinking.show { display: flex; }
+        .thinking-dots span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: thinking-bounce 1.4s infinite ease-in-out both;
+        }
+        .thinking-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .thinking-dots span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes thinking-bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        /* Hint Buttons */
+        .hint-buttons {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .hint-btn {
+            padding: 0.3rem 0.6rem;
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            background: white;
+            color: var(--primary);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .hint-btn:hover {
+            background: var(--interactive);
+        }
+        .hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         
         .view-tabs { display: flex; gap: 0.3rem; margin-bottom: 0.75rem; }
         .view-tab {
@@ -580,6 +671,28 @@
         
         <!-- ============ TAB 3: Challenge ============ -->
         <div id="challenge" class="tab-content">
+            <!-- MathPal Disclosure Banner -->
+            <div class="ai-disclosure-banner">
+                <div class="banner-content">
+                    <svg class="mathpal-avatar" width="40" height="40" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
+                        <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
+                        <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
+                        <line x1="50" y1="35" x2="50" y2="25" stroke="#0f766e" stroke-width="2"/>
+                        <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
+                        <circle cx="40" cy="47" r="5" fill="white"/>
+                        <circle cx="60" cy="47" r="5" fill="white"/>
+                        <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                        <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                        <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
+                    </svg>
+                    <div class="banner-text">
+                        <div class="banner-title">MathPal - Your AI Study Buddy</div>
+                        <div class="banner-subtitle">Learns alongside you • Can make mistakes • May be occasionally unavailable</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="challenge-layout">
                 <div class="challenge-viz">
                     <div class="view-tabs no-print">
@@ -645,12 +758,29 @@
                         </div>
                     </div>
                     
+                    <!-- MathPal Box with AI -->
                     <div class="mathpal-box">
                         <div class="mathpal-header">
-                            <svg width="16" height="16" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#e6fffb"/><rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/><rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/><circle cx="40" cy="47" r="3" fill="#0f766e"/><circle cx="60" cy="47" r="3" fill="#0f766e"/></svg>
+                            <svg width="20" height="20" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
+                                <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
+                                <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
+                                <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                                <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                                <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
+                            </svg>
                             MathPal
                         </div>
-                        <div class="mathpal-text" id="mathpalText">Start by finding the limit of aₙ as n approaches infinity. What value does the general term approach?</div>
+                        <div class="mathpal-thinking" id="mathpalThinking">
+                            <span>Thinking</span>
+                            <div class="thinking-dots"><span></span><span></span><span></span></div>
+                        </div>
+                        <div class="mathpal-text" id="mathpalText">Hey! Let's figure this one out together. First, what happens to the general term as n gets really big?</div>
+                        <div class="hint-buttons" id="hintButtons">
+                            <button class="hint-btn" onclick="requestHint('nudge')">💭 Nudge</button>
+                            <button class="hint-btn" onclick="requestHint('observation')">🔍 What to look for</button>
+                            <button class="hint-btn" onclick="requestHint('strategy')">🤝 Work together</button>
+                        </div>
                     </div>
                     
                     <div class="button-group" style="margin-top: 0.75rem;">
@@ -1618,6 +1748,119 @@
         function sumTo(fn, n) { let s = 0; for (let i = 1; i <= n; i++) s += fn(i); return s; }
         
         // =========================================
+        // MATHPAL AI FUNCTIONS
+        // =========================================
+        function showMathPalThinking() {
+            document.getElementById('mathpalThinking').classList.add('show');
+            document.getElementById('mathpalText').style.display = 'none';
+        }
+        
+        function hideMathPalThinking() {
+            document.getElementById('mathpalThinking').classList.remove('show');
+            document.getElementById('mathpalText').style.display = 'block';
+        }
+        
+        function setMathPalText(text) {
+            const el = document.getElementById('mathpalText');
+            el.innerHTML = text;
+            // Render any LaTeX in the response
+            if (text.includes('$')) {
+                el.innerHTML = text.replace(/\$([^$]+)\$/g, (match, latex) => {
+                    const span = document.createElement('span');
+                    try {
+                        katex.render(latex, span, { throwOnError: false });
+                        return span.outerHTML;
+                    } catch(e) {
+                        return match;
+                    }
+                });
+            }
+        }
+        
+        function getMathPalFallback(context) {
+            const fallbacks = {
+                intro: "Hey! Let's figure this one out together. What happens to the general term as n gets really big?",
+                limitCorrect: "Nice! The limit is 0, so we can't use the Divergence Test. I'm thinking we need to compare this to a series we know. What do you think?",
+                limitWrong: "Hmm, I got something different. Try plugging in really big values for n — what happens to the fraction?",
+                comparisonSelected: "Good pick! Now let's think about which series is bigger. Try animating the graph to see!",
+                reasonIncorrect: "Wait, that reasoning doesn't quite work. Remember: smaller than convergent = convergent, bigger than divergent = divergent. The other combinations are inconclusive.",
+                hint_nudge: "Take a look at the dominant terms in the numerator and denominator. For really large n, which one 'wins'?",
+                hint_observation: "Try increasing the number of terms. Watch how the partial sums grow — does it look like it's leveling off or shooting up?",
+                hint_strategy: "Let's work through this: first find the limit, then if it's 0, pick a comparison series that looks similar for large n."
+            };
+            return fallbacks[context] || "Let's keep working on this together!";
+        }
+        
+        async function callMathPalAI(prompt, context) {
+            showMathPalThinking();
+            
+            const mathpalPrompt = `You are MathPal, a friendly peer study buddy (not a teacher) helping with infinite series.
+Speak casually like a classmate: "I got...", "I tried...", "Want to see what I think?"
+Keep responses to 2-3 SHORT sentences, very conversational.
+Use $ for LaTeX math when showing formulas.
+Never lecture — suggest and explore together.
+
+Current problem: ${challengeProblem.name} = ${challengeProblem.termLatex}
+The series ${challengeProblem.diverges ? 'diverges' : 'converges'}.
+Correct comparison: ${challengeProblem.comparison} with reasoning: ${challengeProblem.reason}
+
+Context: ${context}
+
+${prompt}`;
+            
+            for (let attempt = 0; attempt <= 2; attempt++) {
+                try {
+                    if (attempt > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                    }
+                    
+                    const response = await fetch('/api/gemini', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            contents: [{ role: "user", parts: [{ text: mathpalPrompt }] }] 
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error(`API error: ${response.status}`);
+                    
+                    const data = await response.json();
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!text) throw new Error('Empty response');
+                    
+                    hideMathPalThinking();
+                    setMathPalText(text);
+                    return text;
+                    
+                } catch (error) {
+                    console.log('MathPal API attempt failed:', error);
+                    if (attempt === 2) {
+                        hideMathPalThinking();
+                        setMathPalText(getMathPalFallback(context));
+                        return null;
+                    }
+                }
+            }
+        }
+        
+        async function requestHint(type) {
+            const hintPrompts = {
+                nudge: `Give a very gentle hint about ${challengeProblem.name}. Don't give away the answer, just point them in the right direction. One sentence max.`,
+                observation: `Suggest something specific to observe in the visualization for ${challengeProblem.name}. What pattern should they look for?`,
+                strategy: `Share your thinking process for analyzing ${challengeProblem.name}. What steps would you take? Keep it collaborative.`
+            };
+            
+            const hintContexts = {
+                nudge: 'hint_nudge',
+                observation: 'hint_observation', 
+                strategy: 'hint_strategy'
+            };
+            
+            await callMathPalAI(hintPrompts[type], hintContexts[type]);
+        }
+        
+        // =========================================
         // TAB 3: CHALLENGE
         // =========================================
         function newChallenge() {
@@ -1640,9 +1883,13 @@
             document.querySelectorAll('.comp-option').forEach(o => o.classList.remove('selected'));
             document.querySelectorAll('.reason-btn').forEach(b => b.classList.remove('selected'));
             
-            document.getElementById('mathpalText').textContent = 'Start by finding the limit of aₙ as n approaches infinity. What value does the general term approach?';
-            document.getElementById('challengeTermDisplay').textContent = challengeTerms;
+            // Call MathPal for intro
+            callMathPalAI(
+                `Greet the student and ask about finding the limit of ${challengeProblem.termLatex} as n approaches infinity. Be encouraging and curious.`,
+                'intro'
+            );
             
+            document.getElementById('challengeTermDisplay').textContent = challengeTerms;
             drawChallengeView();
         }
         
@@ -1662,12 +1909,19 @@
                 // Build comparison options
                 buildComparisonOptions();
                 
-                document.getElementById('mathpalText').textContent = "Good! The limit is 0, so the Divergence Test doesn't tell us anything. We need to use comparison. Which series behaves similarly for large n?";
+                // Call MathPal
+                callMathPalAI(
+                    `The student correctly found the limit is 0. Celebrate briefly and suggest thinking about comparison series. What series might behave similarly to ${challengeProblem.termLatex}?`,
+                    'limitCorrect'
+                );
             } else if (input === '' || input === null) {
                 feedback.innerHTML = '<span style="color: var(--accent-amber);">Enter a value</span>';
             } else if (!isZero && challengeProblem.limit === '0') {
                 feedback.innerHTML = '<span style="color: var(--accent-red);">Not quite. Think about what happens as n gets very large.</span>';
-                document.getElementById('mathpalText').textContent = "Consider: what happens to the numerator vs the denominator as n → ∞?";
+                callMathPalAI(
+                    `The student guessed "${input}" but the limit of ${challengeProblem.termLatex} is actually 0. Give a gentle hint without revealing the answer. Maybe suggest plugging in large values.`,
+                    'limitWrong'
+                );
             } else {
                 feedback.innerHTML = '<span style="color: var(--success);">✓ Correct! Since the limit ≠ 0, the series diverges by the Divergence Test.</span>';
                 showSolution();
@@ -1709,7 +1963,12 @@
             document.getElementById('challengeLegend').style.display = 'flex';
             
             const comp = famousSeries[compId];
-            document.getElementById('mathpalText').textContent = `You chose ${comp.name}. Now, how does your series compare to ${comp.name}? Is it bigger or smaller?`;
+            
+            // Call MathPal
+            callMathPalAI(
+                `The student selected ${comp.name} as comparison for ${challengeProblem.name}. ${compId === challengeProblem.bestComparison ? 'Good choice!' : 'This might work but ' + famousSeries[challengeProblem.bestComparison].name + ' would be better.'} Ask them to think about whether ${challengeProblem.name} is bigger or smaller than ${comp.name}. Suggest animating the graph.`,
+                'comparisonSelected'
+            );
             
             drawChallengeView();
         }
@@ -1724,19 +1983,27 @@
             const isCorrectReason = reason === challengeProblem.bestReason;
             
             if (isCorrectReason && isCorrectComparison) {
-                document.getElementById('mathpalText').textContent = "Excellent! That's exactly right. Here's the complete solution:";
+                callMathPalAI(
+                    `The student got it right! ${challengeProblem.name} ${challengeProblem.diverges ? 'diverges' : 'converges'} by comparison with ${comp.name}. Celebrate their success briefly.`,
+                    'correct'
+                );
                 showSolution();
             } else if (reason === 'bigger-conv' || reason === 'smaller-div') {
-                document.getElementById('mathpalText').textContent = "That reasoning is inconclusive. Being bigger than something convergent, or smaller than something divergent, doesn't determine behavior. Try a different approach.";
+                callMathPalAI(
+                    `The student chose inconclusive reasoning: "${reason === 'bigger-conv' ? 'bigger than convergent' : 'smaller than divergent'}". Explain why this doesn't work — give a counter-example if helpful. Keep it friendly.`,
+                    'reasonIncorrect'
+                );
             } else if (!isCorrectComparison) {
                 // They have the right logic but wrong comparison
-                if (reason === 'smaller-conv') {
-                    document.getElementById('mathpalText').textContent = `Good logic! But is your series actually smaller than ${comp.name}? Check the graphs and think about which terms dominate for large n.`;
-                } else if (reason === 'bigger-div') {
-                    document.getElementById('mathpalText').textContent = `Good logic! But is your series actually bigger than ${comp.name}? Look at the graph and compare the values.`;
-                }
+                callMathPalAI(
+                    `The student has the right logic (${reason}) but applied it to ${comp.name} instead of ${famousSeries[challengeProblem.bestComparison].name}. Ask them to check if ${challengeProblem.name} is really ${reason.includes('smaller') ? 'smaller' : 'bigger'} than ${comp.name}. Suggest looking at the graph.`,
+                    'wrongComparison'
+                );
             } else {
-                document.getElementById('mathpalText').textContent = "Check your comparison carefully. Look at the graph — which series has larger partial sums?";
+                callMathPalAI(
+                    `The student picked ${comp.name} (correct!) but chose wrong reasoning: ${reason}. The correct reasoning is ${challengeProblem.bestReason}. Give a hint about comparing the terms without revealing the answer.`,
+                    'wrongReason'
+                );
             }
         }
         
