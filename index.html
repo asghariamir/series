@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Version 6.0 - Updated number line to match Tab 3 style -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Series Explorer | Mathswell</title>
+    <title>Series Explorer v6 | Mathswell</title>
     <link rel="icon" href="/logo-mathswell-square-mirror.ico" type="image/x-icon">
     <link rel="icon" href="/logo-mathswell-square-mirror.svg" type="image/svg+xml">
     
@@ -131,6 +132,8 @@
             border: 1px solid #e0e0e0;
         }
         .viz-box.full-width { grid-column: 1 / -1; }
+        .viz-box canvas { width: 100%; display: block; }
+        #numberline-canvas { background: white; border-radius: 8px; min-height: 140px; }
         
         .viz-title { font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
         
@@ -351,7 +354,7 @@
 </head>
 <body>
     <div class="mathswell-nav no-print">
-        <a href="/" class="mw-link">
+        <a href="https://mathswell.com" class="mw-link">
             <img src="/logo-mathswell-square-mirror.svg" alt="Mathswell" width="28" height="28">
             <span>MATHSWELL</span>
         </a>
@@ -428,7 +431,7 @@
                         
                         <div class="viz-box full-width">
                             <div class="viz-title">➡️ Number Line — Watch the Sum Accumulate</div>
-                            <canvas id="numberline-canvas" height="100"></canvas>
+                            <canvas id="numberline-canvas" height="160"></canvas>
                         </div>
                     </div>
                     
@@ -1000,49 +1003,69 @@
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            const config = seriesConfig[currentSeries];
-            const padding = 40;
-            const lineY = canvas.height / 2 + 10;
+            const padding = 50;
+            const lineY = canvas.height / 2 + 20;
             const width = canvas.width - 2 * padding;
             
-            let minX = config.minX;
-            let maxX = config.maxX;
+            // Calculate dynamic range from actual partial sums
+            const displaySums = partialSums.slice(0, currentTermIndex);
+            const allVals = [...displaySums, 0];
             
-            const range = maxX - minX || 1;
-            const getX = val => padding + ((val - minX) / range) * width;
+            // Get range for all 100 terms to keep scale consistent during animation
+            let nlMin = Math.min(0, ...partialSums) * 1.1;
+            let nlMax = Math.max(...partialSums) * 1.1;
+            
+            // Handle edge cases
+            if (nlMin === nlMax) { nlMin = 0; nlMax = 1; }
+            if (!isFinite(nlMin)) nlMin = 0;
+            if (!isFinite(nlMax)) nlMax = 1;
+            
+            const nlRange = nlMax - nlMin || 1;
+            const getX = val => padding + ((val - nlMin) / nlRange) * width;
             
             // Draw number line
             ctx.strokeStyle = '#ccc';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(padding, lineY);
-            ctx.lineTo(canvas.width - padding, lineY);
+            ctx.lineTo(padding + width, lineY);
             ctx.stroke();
             
-            // Draw ticks
+            // Arrow at end
+            ctx.beginPath();
+            ctx.moveTo(padding + width - 8, lineY - 5);
+            ctx.lineTo(padding + width, lineY);
+            ctx.lineTo(padding + width - 8, lineY + 5);
+            ctx.stroke();
+            
+            // Tick marks and labels
             ctx.fillStyle = '#666';
             ctx.font = '10px monospace';
             ctx.textAlign = 'center';
-            
             const tickCount = 6;
             for (let i = 0; i <= tickCount; i++) {
-                const val = minX + (range * i / tickCount);
+                const val = nlMin + (nlRange * i / tickCount);
                 const x = getX(val);
                 ctx.strokeStyle = '#ddd';
+                ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.moveTo(x, lineY - 4);
-                ctx.lineTo(x, lineY + 4);
+                ctx.moveTo(x, lineY - 5);
+                ctx.lineTo(x, lineY + 5);
                 ctx.stroke();
                 ctx.fillStyle = '#666';
-                ctx.fillText(val.toFixed(1), x, lineY + 16);
+                ctx.fillText(val.toFixed(1), x, lineY + 18);
             }
             
-            if (currentTermIndex === 0) return;
+            if (currentTermIndex === 0) {
+                ctx.fillStyle = '#888';
+                ctx.font = '14px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Press + or Play to see accumulation', canvas.width/2, lineY - 40);
+                return;
+            }
             
-            // Draw accumulation
-            const displaySums = partialSums.slice(0, currentTermIndex);
+            // Draw accumulation arcs
             const displayTerms = seriesTerms.slice(0, currentTermIndex);
-            
             let prevX = getX(0);
             
             for (let i = 0; i < currentTermIndex; i++) {
@@ -1053,10 +1076,10 @@
                 // Draw arc
                 if (Math.abs(x - prevX) > 2) {
                     const midX = (prevX + x) / 2;
-                    const arcHeight = Math.min(20, Math.abs(x - prevX) * 0.25);
+                    const arcHeight = Math.min(25, Math.abs(x - prevX) * 0.3);
                     const arcY = term >= 0 ? lineY - arcHeight : lineY + arcHeight;
                     
-                    ctx.strokeStyle = i === currentTermIndex - 1 ? 'rgba(15,118,110,0.7)' : 'rgba(15,118,110,0.15)';
+                    ctx.strokeStyle = i === currentTermIndex - 1 ? 'rgba(15,118,110,0.8)' : 'rgba(15,118,110,0.2)';
                     ctx.lineWidth = i === currentTermIndex - 1 ? 2 : 1;
                     ctx.beginPath();
                     ctx.moveTo(prevX, lineY);
@@ -1064,21 +1087,19 @@
                     ctx.stroke();
                 }
                 
-                // Draw point
-                ctx.fillStyle = i === currentTermIndex - 1 ? '#0f766e' : 'rgba(16,185,129,0.3)';
-                ctx.beginPath();
-                ctx.arc(x, lineY, i === currentTermIndex - 1 ? 5 : 2, 0, Math.PI * 2);
-                ctx.fill();
-                
                 prevX = x;
             }
             
-            // Label final
-            if (currentTermIndex > 0) {
-                ctx.fillStyle = '#0f766e';
-                ctx.font = 'bold 10px sans-serif';
-                ctx.fillText(`S${currentTermIndex}`, getX(displaySums[currentTermIndex-1]), lineY - 12);
-            }
+            // Final point and label
+            const finalSum = displaySums[currentTermIndex - 1];
+            ctx.fillStyle = '#0f766e';
+            ctx.beginPath();
+            ctx.arc(getX(finalSum), lineY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.font = 'bold 11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`S${currentTermIndex}`, getX(finalSum), lineY - 15);
         }
         
         function drawStaircase() {
